@@ -1,0 +1,340 @@
+:root {
+  --hero-height: 100vh;
+  --overlay-start: rgba(255,255,255,0.02);
+  --overlay-end: rgba(255,255,255,0.06);
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+}
+
+/* -----------------------------
+   NAVBAR
+------------------------------ */
+
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: #d4ffd4;
+}
+
+.login-btn {
+  padding: 8px 16px;
+  background: white;
+  color: #2f6b2f !important;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.login-btn:hover {
+  background: #d4ffd4;
+}
+
+/* -----------------------------
+   HERO SECTION
+------------------------------ */
+
+.hero {
+  height: var(--hero-height);
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, var(--overlay-start), var(--overlay-end)),
+    url("landing.png") no-repeat right center;
+  background-size: cover;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12%;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.06) 100%);
+}
+
+.left-col {
+  width: 50%;
+  min-width: 320px;
+  padding: 4rem;
+  z-index: 2;
+}
+
+.mobile-image {
+  display: none;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* Wide Screen Adjustments */
+@media (min-width: 1200px) {
+  .hero {
+    background-position: 75% center;
+  }
+  .left-col {
+    width: 46%;
+  }
+}
+
+/* Mobile Layout */
+@media (max-width: 720px) {
+  .hero {
+    align-items: flex-start;
+    background-position: center top;
+    background-size: contain;
+  }
+  
+  .left-col {
+    display: none;
+  }
+
+  .mobile-image {
+    display: block;
+  }
+
+  .nav-links {
+    gap: 15px;
+  }
+}
+.hero-text {
+  position: absolute;
+  top: 30%;          /* move text a bit up */
+  left: 5%;          /* keep on left side */
+  transform: translateY(-40%); /* adjust vertical centering */
+  text-align: left;
+  color: white;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  z-index: 3;
+  max-width: 600px;
+}
+
+.hero-text h1 {
+  font-size: 5rem;   /* bigger title */
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.hero-text p {
+  font-size: 1.8rem; /* slightly bigger paragraph */
+  font-weight: 500;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 720px) {
+  .hero-text {
+    left: 5%;
+    top: 35%;       /* move up a bit more on mobile */
+    max-width: 90%;
+    transform: translateY(-35%);
+  }
+  .hero-text h1 {
+    font-size: 3rem; /* responsive title */
+  }
+
+  .hero-text p {
+    font-size: 1.3rem;
+  }
+}
+/* -----------------------------
+   NAVBAR - Professional Enhancements
+------------------------------ */
+
+.navbar {
+  position: fixed; /* keeps navbar on top when scrolling */
+  top: 0;
+  width: 100%;
+  padding: 15px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* subtle shadow */
+  transition: all 0.3s ease; /* smooth hover/scroll effects */
+}
+
+/* Change navbar background on scroll */
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Logo */
+.logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #d4ffd4;
+}
+
+/* Nav links */
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-links li a:hover {
+  background: rgba(212, 255, 212, 0.2);
+  color: #2f6b2f;
+}
+
+/* Login Button */
+.login-btn {
+  padding: 8px 18px;
+  background: white;
+  color: #2f6b2f !important;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.login-btn:hover {
+  background: #d4ffd4;
+  color: #1a431a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* Responsive adjustments remain same */
+@media (max-width: 720px) {
+  .nav-links {
+    gap: 12px;
+  }
+}
+.box {
+  max-width: 500px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom:10%;
+  margin-left:5%;
+  background: rgba(255,255,255,0.15); /* semi-transparent */
+  backdrop-filter: blur(8px);  
+  font-size: 19px;        /* blur effect */
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  color: white;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  line-height: 1.5;
+  transition: all 0.8s ease;
+  opacity: 0;
+  animation: fadeInBox 1.5s ease forwards;
+  animation-delay: 2.5s; /* adjust timing after previous animations */
+}
+/* POP ANIMATION FOR WASTECARE */
+@keyframes pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* SLIDE-IN ANIMATION FOR QUOTE */
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* APPLY ANIMATIONS */
+.hero-text h1 {
+  animation: pop 2s ease forwards; /* pop effect */
+}
+
+.hero-text p {
+  animation: slideIn 1.9s ease forwards; /* slide effect */
+  animation-delay: 1s; /* starts after pop begins */
+}
+.hero-text p {
+  overflow: hidden;           
+  border-right: 2px solid #d4ffd4; /* cursor effect */
+  white-space: nowrap;              /* single line */
+  width: 0;                         /* start from 0 width */
+  animation: typing 4s steps(120, end) forwards, blink 0.75s step-end 1 forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+/* blinking cursor */
+@keyframes blink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: #d4ffd4; }
+}
+@keyframes fadeInBox {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
