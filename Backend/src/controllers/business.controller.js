@@ -1,11 +1,10 @@
 import User from "../models/user.model";
 
 // Request Pickup
-const requestPickup = async (req, res) => {
+export const requestPickup = async (req, res) => {
     try {
-        const { pickup_address, waste_type, estimated_quantity, preferred_date, notes } = req.body;
+        const { pickupAddress, wasteType, estimatedQuantity, preferredDate, notes } = req.body;
         
-        // Get business user details
         const business = await User.findById(req.user.id);
         
         if (!business) {
@@ -15,24 +14,21 @@ const requestPickup = async (req, res) => {
             });
         }
 
-        // Validation
-        if (!pickup_address) {
+        if (!pickupAddress) {
             return res.status(400).json({
                 success: false,
                 message: "Pickup address is required"
             });
         }
 
-        // Create pickup request
         const pickupRequest = await PickupRequest.create({
             business_id: business._id,
-            business_name: business.full_name,
-            business_contact: business.email, // or phone if available
+            business_name: business.fullName,
+            business_contact: business.email, 
             pickup_address: pickup_address || business.address,
-            ward_no: business.ward_no,
-            waste_type,
-            estimated_quantity,
-            preferred_date,
+            wasteType,
+            estimatedQuantity,
+            preferredDate,
             notes,
             status: "pending"
         });
