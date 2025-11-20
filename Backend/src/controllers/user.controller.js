@@ -1,14 +1,14 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
+import User from "../models/user.model.js";
+import jwt from "jsonwebtoken"
+import bcrypt from "bcryptjs"
 // Register Controller
 export const register = async (req, res) => {
     try {
-        const { full_name, email, password, role, address, ward_no } = req.body;
 
+        const { fullName, email, password, role} = req.body;
+        
         // Validation
-        if (!full_name || !email || !password) {
+        if (!fullName || !email || !password) {
             return res.status(400).json({
                 success: false,
                 message: "Please provide full name, email and password"
@@ -30,12 +30,10 @@ export const register = async (req, res) => {
 
         // Create new user
         const user = await User.create({
-            full_name,
+            fullName,
             email,
             password: hashedPassword,
-            role: role || "resident",
-            address,
-            ward_no
+            role: role || "user",
         });
 
         // Generate JWT token
@@ -56,7 +54,6 @@ export const register = async (req, res) => {
         res.status(201).json({
             success: true,
             message: "User registered successfully",
-            token,
             user: {
                 id: user._id,
                 full_name: user.full_name,
@@ -73,12 +70,10 @@ export const register = async (req, res) => {
     }
 };
 
-// Login Controller
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        // Validation
+        console.log(email , password)
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -86,7 +81,6 @@ export const login = async (req, res) => {
             });
         }
 
-        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({
@@ -95,7 +89,6 @@ export const login = async (req, res) => {
             });
         }
 
-        // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -122,14 +115,11 @@ export const login = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Login successful",
-            token,
             user: {
                 id: user._id,
                 full_name: user.full_name,
                 email: user.email,
                 role: user.role,
-                address: user.address,
-                ward_no: user.ward_no
             }
         });
     } catch (error) {
