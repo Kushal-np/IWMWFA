@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 const routeSchema = new mongoose.Schema(
   {
     ward_no: { type: Number, required: true },
