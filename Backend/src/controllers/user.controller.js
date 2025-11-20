@@ -2,17 +2,20 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const register = async (req, res) => {
+// Register Controller
+export const register = async (req, res) => {
     try {
-        const { fullName, email, password, role } = req.body;
+        const { full_name, email, password, role, address, ward_no } = req.body;
 
-        if (!fullName || !email || !password) {
+        // Validation
+        if (!full_name || !email || !password) {
             return res.status(400).json({
                 success: false,
                 message: "Please provide full name, email and password"
             });
         }
 
+        // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
@@ -21,21 +24,34 @@ const register = async (req, res) => {
             });
         }
 
+        // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Create new user
         const user = await User.create({
-            fullName,
+            full_name,
             email,
             password: hashedPassword,
             role: role || "resident",
+            address,
+            ward_no
         });
 
+        // Generate JWT token
         const token = jwt.sign(
-            { id: user._id,  role: user.role },
+            { id: user._id, role: user.role },
             process.env.JWT_SECRET_KEY,
             { expiresIn: "7d" }
         );
+
+        // Set cookie with token
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
 
         res.status(201).json({
             success: true,
@@ -45,7 +61,7 @@ const register = async (req, res) => {
                 id: user._id,
                 full_name: user.full_name,
                 email: user.email,
-                role: user.role,
+                role: user.role
             }
         });
     } catch (error) {
@@ -57,10 +73,12 @@ const register = async (req, res) => {
     }
 };
 
-const login = async (req, res) => {
+// Login Controller
+export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // Validation
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -89,9 +107,17 @@ const login = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             { id: user._id, email: user.email, role: user.role },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET_KEY,
             { expiresIn: "7d" }
         );
+
+        // Set cookie with token
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
 
         res.status(200).json({
             success: true,
@@ -116,12 +142,15 @@ const login = async (req, res) => {
 };
 
 // Logout Controller
-const logout = async (req, res) => {
+export const logout = async (req, res) => {
     try {
-        // Since JWT is stateless, logout is handled on client-side
-        // by removing the token from storage
-        // This endpoint can be used for logging or additional cleanup
-        
+        res.cookie("token", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            expires: new Date(0) // Expire immediately
+        });
+
         res.status(200).json({
             success: true,
             message: "Logout successful"
@@ -135,8 +164,7 @@ const logout = async (req, res) => {
     }
 };
 
-// Get Current User (bonus controller)
-const getCurrentUser = async (req, res) => {
+export const getCurrentUser = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");
         
@@ -160,9 +188,3 @@ const getCurrentUser = async (req, res) => {
     }
 };
 
-module.exports = {
-    register,
-    login,
-    logout,
-    getCurrentUser
-};
