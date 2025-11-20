@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
-const businessSchema = new mongoose.Schema(
+const pickUpRequest = new mongoose.Schema(
   {
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      
     },
 
     pickupAddress: {
@@ -42,5 +42,5 @@ const businessSchema = new mongoose.Schema(
   }
 );
 
-const Business = new mongoose.model("Business" , businessSchema);
-export default Business
+const PickUpRequest = new mongoose.model("PickUpRequest" , pickUpRequest);
+export default PickUpRequest;
