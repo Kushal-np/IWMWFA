@@ -15,4 +15,4 @@ const routeSchema = new mongoose.Schema(
 );
 
 const Route = new mongoose.model("Route", routeSchema);
-export default Router ; 
+export default Route ; 
