@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 
-export default function AuthSchedule() {
-  const [activeMenu, setActiveMenu] = useState('Schedule');
+export default function Payment() {
+  const [activeMenu, setActiveMenu] = useState('Payment');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Mock user data - in real app this would come from Redux
-  const user = {
-    fullName: 'User Name',
-    ward: 5
-  };
+  const [bills] = useState([
+    { month: 'August 2025', amount: 300, paid: true },
+    { month: 'September 2025', amount: 300, paid: true },
+    { month: 'October 2025', amount: 300, paid: false },
+    { month: 'November 2025', amount: 300, paid: false }
+  ]);
 
   const menuItems = [
     { name: 'Dashboard', route: '/dash' },
     { name: 'Pickup Requests', route: '/requestPickup' },
     { name: 'Payment', route: '/payment' },
     { name: 'Complaints', route: '/complaints' },
-    { name: 'Schedule', route: '/schedule' },
+    { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' },
     { name: 'Logout', route: '/logout' }
   ];
@@ -26,25 +27,10 @@ export default function AuthSchedule() {
     window.location.href = route;
   };
 
-  // Generate schedule data for wards 1-33
-  const generateScheduleData = () => {
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const wasteTypes = ["Organic", "Recyclables", "General Waste"];
-    const schedules = [];
-
-    for (let i = 1; i <= 33; i++) {
-      schedules.push({
-        ward: i,
-        wasteType: wasteTypes[i % 3],
-        day: days[i % 6],
-        time: i % 2 === 0 ? "8:00 AM – 11:00 AM" : "7:00 AM – 10:00 AM"
-      });
-    }
-    return schedules;
+  const handlePayNow = (month) => {
+    alert(`Processing payment for ${month}...`);
+    // In a real app, you would handle the payment logic here
   };
-
-  const scheduleData = generateScheduleData();
-  const userSchedules = scheduleData.filter(schedule => schedule.ward === user.ward);
 
   return (
     <div style={{ 
@@ -216,177 +202,143 @@ export default function AuthSchedule() {
           fontSize: '2rem',
           marginBottom: '6px',
           color: '#1f5520'
-        }}>Pickup Schedule</h1>
+        }}>Payments</h1>
         <p style={{
           opacity: 0.6,
           marginBottom: '25px',
           color: '#2f6b2f',
           fontSize: '1rem'
-        }}>Personalized waste pickup schedule for Ward {user.ward}</p>
+        }}>View your monthly bills and make payments.</p>
 
-        {/* Ward Info Card */}
-        <div style={{
-          background: 'white',
-          padding: '24px',
-          borderRadius: '12px',
-          marginBottom: '24px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)'
-        }}>
-          <h2 style={{ 
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            marginBottom: '16px',
-            color: '#1f5520'
-          }}>
-            Your Ward Information
-          </h2>
-          <p style={{ 
-            fontSize: '1.1rem',
-            marginBottom: '8px',
-            color: '#2f6b2f'
-          }}>
-            <strong>Ward Number:</strong> {user.ward}
-          </p>
-          <p style={{ 
-            fontSize: '1.1rem',
-            color: '#2f6b2f'
-          }}>
-            <strong>Resident:</strong> {user.fullName}
-          </p>
-        </div>
-
-        {/* Schedule Table */}
+        {/* Bills Table Section */}
         <div>
           <h2 style={{
             marginBottom: '15px',
             color: '#1f5520',
             fontSize: '1.5rem'
-          }}>Ward {user.ward} Pickup Schedule</h2>
-          
-          {userSchedules.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                background: 'white',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
-                fontSize: '1rem'
-              }}>
-                <thead>
-                  <tr style={{
-                    background: 'linear-gradient(135deg, #d7ffd2, #c5f5c0)'
-                  }}>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Ward No.</th>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Type of Waste</th>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Pickup Day</th>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userSchedules.map((schedule) => (
-                    <tr 
-                      key={schedule.ward}
-                      style={{
-                        transition: 'background 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#f9fff8';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'transparent';
-                      }}
-                    >
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>Ward {schedule.ward}</td>
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>{schedule.wasteType}</td>
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>{schedule.day}</td>
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>{schedule.time}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div style={{ 
-              textAlign: 'center',
-              padding: '30px',
+          }}>Monthly Bills</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse',
               background: 'white',
               borderRadius: '12px',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)'
+              overflow: 'hidden',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+              fontSize: '1rem'
             }}>
-              No schedule available for your ward.
-            </div>
-          )}
-        </div>
-
-        {/* Reminder Card */}
-        <div style={{
-          background: 'white',
-          padding: '24px',
-          borderRadius: '12px',
-          marginTop: '24px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)'
-        }}>
-          <h3 style={{ 
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            marginBottom: '16px',
-            color: '#1f5520'
-          }}>
-            📌 Important Reminders
-          </h3>
-          <ul style={{ 
-            listStyleType: 'disc',
-            paddingLeft: '30px',
-            lineHeight: '1.8',
-            color: '#2f6b2f'
-          }}>
-            <li>Please segregate your waste according to the type</li>
-            <li>Keep your bins ready before the pickup time</li>
-            <li>Do not mix different types of waste</li>
-            <li>Report any missed pickups through the complaints section</li>
-          </ul>
+              <thead>
+                <tr style={{
+                  background: 'linear-gradient(135deg, #d7ffd2, #c5f5c0)'
+                }}>
+                  <th style={{
+                    padding: '16px',
+                    borderBottom: '1px solid #e0e0e0',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    color: '#2f6b2f'
+                  }}>SN</th>
+                  <th style={{
+                    padding: '16px',
+                    borderBottom: '1px solid #e0e0e0',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    color: '#2f6b2f'
+                  }}>Month</th>
+                  <th style={{
+                    padding: '16px',
+                    borderBottom: '1px solid #e0e0e0',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    color: '#2f6b2f'
+                  }}>Amount (Rs.)</th>
+                  <th style={{
+                    padding: '16px',
+                    borderBottom: '1px solid #e0e0e0',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    color: '#2f6b2f'
+                  }}>Status</th>
+                  <th style={{
+                    padding: '16px',
+                    borderBottom: '1px solid #e0e0e0',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    color: '#2f6b2f'
+                  }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bills.slice().reverse().map((bill, index) => (
+                  <tr 
+                    key={index} 
+                    style={{
+                      transition: 'background 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#f9fff8';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    <td style={{
+                      padding: '16px',
+                      borderBottom: '1px solid #e0e0e0',
+                      textAlign: 'left'
+                    }}>{index + 1}</td>
+                    <td style={{
+                      padding: '16px',
+                      borderBottom: '1px solid #e0e0e0',
+                      textAlign: 'left'
+                    }}>{bill.month}</td>
+                    <td style={{
+                      padding: '16px',
+                      borderBottom: '1px solid #e0e0e0',
+                      textAlign: 'left'
+                    }}>{bill.amount}</td>
+                    <td style={{
+                      padding: '16px',
+                      borderBottom: '1px solid #e0e0e0',
+                      textAlign: 'left'
+                    }}>{bill.paid ? 'Paid' : 'Not Paid'}</td>
+                    <td style={{
+                      padding: '16px',
+                      borderBottom: '1px solid #e0e0e0',
+                      textAlign: 'left'
+                    }}>
+                      {!bill.paid && (
+                        <button
+                          onClick={() => handlePayNow(bill.month)}
+                          style={{
+                            padding: '8px 14px',
+                            background: 'linear-gradient(135deg, #2f6b2f, #3a7d3a)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontWeight: 500,
+                            fontSize: '1rem',
+                            transition: 'all 0.3s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.background = 'linear-gradient(135deg, #3a7d3a, #2f6b2f)';
+                            e.target.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.background = 'linear-gradient(135deg, #2f6b2f, #3a7d3a)';
+                            e.target.style.transform = 'translateY(0)';
+                          }}
+                        >
+                          Pay Now
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
     </div>

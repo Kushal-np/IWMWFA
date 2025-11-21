@@ -7,6 +7,10 @@ import UnAuthorized from './ Components/UnAuthorized';
 import Schedule from './Pages/SchedulePages/Schedule';
 import AuthSchedule from './Pages/SchedulePages/AuthSchedule';
 import AboutPage from './Pages/AboutPage/About';
+import RequestPickupPage from './Pages/PickupPage/RequestPickupPage';
+import Payment from './Pages/Payment/Payment';
+import ProfilePage from './Pages/Profile/ProfilePage';
+import ComplaintPage from './Pages/Complaint/ComplaintPage';
 function App() {
   return (
       <Routes>
@@ -16,6 +20,10 @@ function App() {
         <Route path="/schedule" element={<Schedule/>} />
         <Route path = "/authSchedule" element={<AuthSchedule/>} />
         <Route path ="/about" element={<AboutPage/>} />
+        <Route path="/requestPickup" element={<RequestPickupPage/>}/>
+         <Route path ="/payment" element={<Payment/>} />
+        <Route path ="/complaints" element={<ComplaintPage/>} />
+        <Route path ="/profile" element={<ProfilePage/>}/>
         <Route 
           path="/home" 
           element={
