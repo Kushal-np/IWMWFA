@@ -17,7 +17,7 @@ const uploadToCloudinary = async (buffer, folder) => {
 
 export const createComplaint = async (req, res) => {
   try {
-    const { description, location } = req.body;
+    const { title , description, location } = req.body;
 
     if (!description) {
       return res.status(400).json({
@@ -52,6 +52,7 @@ export const createComplaint = async (req, res) => {
     // Create complaint in DB
     const complaint = await Complaint.create({
       user: req.user.id,
+      title,
       description,
       location,
       image: imageUrl,
