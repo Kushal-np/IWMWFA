@@ -11,14 +11,14 @@ export default function Payment() {
     { month: 'November 2025', amount: 300, paid: false }
   ]);
 
+  // Sidebar menu items
   const menuItems = [
     { name: 'Dashboard', route: '/dash' },
     { name: 'Pickup Requests', route: '/requestPickup' },
     { name: 'Payment', route: '/payment' },
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
-    { name: 'Profile', route: '/profile' },
-    { name: 'Logout', route: '/logout' }
+    { name: 'Profile', route: '/profile' }, // Keep Profile
   ];
 
   const handleNavigation = (route, itemName) => {
@@ -29,7 +29,6 @@ export default function Payment() {
 
   const handlePayNow = (month) => {
     alert(`Processing payment for ${month}...`);
-    // In a real app, you would handle the payment logic here
   };
 
   return (
@@ -58,9 +57,6 @@ export default function Payment() {
             borderRadius: '8px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
             cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             fontSize: '20px'
           }}
         >
@@ -115,7 +111,7 @@ export default function Payment() {
           margin: 0,
           flex: 1
         }}>
-          {menuItems.slice(0, -1).map((item, index) => (
+          {menuItems.map((item, index) => (
             <li key={index}>
               <a 
                 href={item.route} 
@@ -156,40 +152,6 @@ export default function Payment() {
             </li>
           ))}
         </ul>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-          <li>
-            <a 
-              href={menuItems[menuItems.length - 1].route}
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation(menuItems[menuItems.length - 1].route, menuItems[menuItems.length - 1].name);
-              }}
-              style={{
-                color: '#ffdddd',
-                textDecoration: 'none',
-                display: 'block',
-                padding: '10px 15px',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
-                opacity: 0.85,
-                transition: 'all 0.3s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.opacity = 1;
-                e.target.style.transform = 'translateX(5px)';
-                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.opacity = 0.85;
-                e.target.style.transform = 'translateX(0)';
-                e.target.style.background = 'transparent';
-              }}
-            >
-              {menuItems[menuItems.length - 1].name}
-            </a>
-          </li>
-        </ul>
       </aside>
 
       {/* Main Content */}
@@ -198,25 +160,14 @@ export default function Payment() {
         padding: window.innerWidth < 640 ? '24px' : window.innerWidth < 780 ? '32px' : '40px 50px',
         overflowY: 'auto'
       }}>
-        <h1 style={{
-          fontSize: '2rem',
-          marginBottom: '6px',
-          color: '#1f5520'
-        }}>Payments</h1>
-        <p style={{
-          opacity: 0.6,
-          marginBottom: '25px',
-          color: '#2f6b2f',
-          fontSize: '1rem'
-        }}>View your monthly bills and make payments.</p>
+        <h1 style={{ fontSize: '2rem', marginBottom: '6px', color: '#1f5520' }}>Payments</h1>
+        <p style={{ opacity: 0.6, marginBottom: '25px', color: '#2f6b2f', fontSize: '1rem' }}>
+          View your monthly bills and make payments.
+        </p>
 
-        {/* Bills Table Section */}
+        {/* Bills Table */}
         <div>
-          <h2 style={{
-            marginBottom: '15px',
-            color: '#1f5520',
-            fontSize: '1.5rem'
-          }}>Monthly Bills</h2>
+          <h2 style={{ marginBottom: '15px', color: '#1f5520', fontSize: '1.5rem' }}>Monthly Bills</h2>
           <div style={{ overflowX: 'auto' }}>
             <table style={{
               width: '100%',
@@ -228,85 +179,25 @@ export default function Payment() {
               fontSize: '1rem'
             }}>
               <thead>
-                <tr style={{
-                  background: 'linear-gradient(135deg, #d7ffd2, #c5f5c0)'
-                }}>
-                  <th style={{
-                    padding: '16px',
-                    borderBottom: '1px solid #e0e0e0',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                    color: '#2f6b2f'
-                  }}>SN</th>
-                  <th style={{
-                    padding: '16px',
-                    borderBottom: '1px solid #e0e0e0',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                    color: '#2f6b2f'
-                  }}>Month</th>
-                  <th style={{
-                    padding: '16px',
-                    borderBottom: '1px solid #e0e0e0',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                    color: '#2f6b2f'
-                  }}>Amount (Rs.)</th>
-                  <th style={{
-                    padding: '16px',
-                    borderBottom: '1px solid #e0e0e0',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                    color: '#2f6b2f'
-                  }}>Status</th>
-                  <th style={{
-                    padding: '16px',
-                    borderBottom: '1px solid #e0e0e0',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                    color: '#2f6b2f'
-                  }}>Action</th>
+                <tr style={{ background: 'linear-gradient(135deg, #d7ffd2, #c5f5c0)' }}>
+                  <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>SN</th>
+                  <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Month</th>
+                  <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Amount (Rs.)</th>
+                  <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Status</th>
+                  <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {bills.slice().reverse().map((bill, index) => (
-                  <tr 
-                    key={index} 
-                    style={{
-                      transition: 'background 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f9fff8';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'transparent';
-                    }}
+                  <tr key={index} style={{ transition: 'background 0.2s' }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#f9fff8'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                   >
-                    <td style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left'
-                    }}>{index + 1}</td>
-                    <td style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left'
-                    }}>{bill.month}</td>
-                    <td style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left'
-                    }}>{bill.amount}</td>
-                    <td style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left'
-                    }}>{bill.paid ? 'Paid' : 'Not Paid'}</td>
-                    <td style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left'
-                    }}>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{index + 1}</td>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{bill.month}</td>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{bill.amount}</td>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{bill.paid ? 'Paid' : 'Not Paid'}</td>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>
                       {!bill.paid && (
                         <button
                           onClick={() => handlePayNow(bill.month)}

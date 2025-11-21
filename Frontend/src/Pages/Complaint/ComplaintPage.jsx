@@ -18,57 +18,32 @@ export default function ComplaintPage() {
   const { user } = useSelector((state) => state.auth);
   const { complaints, allComplaints } = useSelector((state) => state.complaint);
 
-  // Fetch user's complaints
   const { isLoading, error } = useQuery({
     queryKey: ["myComplaints"],
     queryFn: getMyComplaints,
-    onSuccess: (data) => {
-      console.log("Fetched complaints:", data);
-      dispatch(setComplaints(data.complaints || []));
-    },
-    onError: (error) => {
-      console.error("Failed to fetch complaints:", error);
-      alert(error.response?.data?.message || "Failed to load complaints");
-    },
+    onSuccess: (data) => dispatch(setComplaints(data.complaints || [])),
   });
 
-  // Fetch all complaints (admin only)
   const { isLoading: isLoadingAll } = useQuery({
     queryKey: ["allComplaints"],
     queryFn: getAllComplaints,
     enabled: user?.role === "admin",
-    onSuccess: (data) => {
-      console.log("Fetched all complaints:", data);
-      dispatch(setAllComplaints(data.complaints || []));
-    },
-    onError: (error) => {
-      console.error("Failed to fetch all complaints:", error);
-    },
+    onSuccess: (data) => dispatch(setAllComplaints(data.complaints || [])),
   });
 
-  // Create complaint mutation
   const createMutation = useMutation({
     mutationFn: createComplaint,
     onSuccess: (data) => {
-      console.log("Complaint created:", data);
-      // Add the new complaint to the store
       dispatch(addComplaint(data.complaint));
-      // Refetch to ensure we have the latest data
       queryClient.invalidateQueries(["myComplaints"]);
-      if (user?.role === "admin") {
-        queryClient.invalidateQueries(["allComplaints"]);
-      }
+      if (user?.role === "admin") queryClient.invalidateQueries(["allComplaints"]);
       setFormData({ title: '', category: '', location: '', description: '' });
       setImageFile(null);
-      // Reset file input
       const fileInput = document.querySelector('input[type="file"]');
       if (fileInput) fileInput.value = '';
       alert("Complaint submitted successfully!");
     },
-    onError: (error) => {
-      console.error("Failed to create complaint:", error);
-      alert(error.response?.data?.message || "Failed to submit complaint");
-    },
+    onError: (error) => alert(error.response?.data?.message || "Failed to submit complaint"),
   });
 
   useEffect(() => {
@@ -85,7 +60,6 @@ export default function ComplaintPage() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' },
-    { name: 'Logout', route: '/logout' }
   ];
 
   const handleNavigation = (route, itemName) => {
@@ -99,49 +73,44 @@ export default function ComplaintPage() {
       alert('Please fill all required fields (Title, Category, and Description)');
       return;
     }
-
     const submitData = new FormData();
     submitData.append('title', formData.title);
     submitData.append('category', formData.category);
     submitData.append('location', formData.location);
     submitData.append('description', formData.description);
-    if (imageFile) {
-      submitData.append('image', imageFile);
-    }
-
+    if (imageFile) submitData.append('image', imageFile);
     createMutation.mutate(submitData);
   };
 
   const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImageFile(e.target.files[0]);
-    }
+    if (e.target.files[0]) setImageFile(e.target.files[0]);
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric', month: 'short', day: 'numeric'
-    });
-  };
+  const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'pending':
-        return { background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 2px 8px rgba(245,158,11,0.3)' };
-      case 'verified':
-        return { background: 'linear-gradient(135deg, #3b82f6, #2563eb)', boxShadow: '0 2px 8px rgba(59,130,246,0.3)' };
-      case 'resolved':
-        return { background: 'linear-gradient(135deg, #2f6b2f, #3a7d3a)', boxShadow: '0 2px 8px rgba(47,107,47,0.3)' };
-      default:
-        return { background: '#999' };
+      case 'pending': return { background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 2px 8px rgba(245,158,11,0.3)' };
+      case 'verified': return { background: 'linear-gradient(135deg, #3b82f6, #2563eb)', boxShadow: '0 2px 8px rgba(59,130,246,0.3)' };
+      case 'resolved': return { background: 'linear-gradient(135deg, #2f6b2f, #3a7d3a)', boxShadow: '0 2px 8px rgba(47,107,47,0.3)' };
+      default: return { background: '#999' };
     }
   };
 
   const sidebarStyle = {
-    position: isMobile ? 'fixed' : 'static', top: 0, left: 0, bottom: 0, width: '250px',
-    background: 'linear-gradient(180deg, #2f6b2f 0%, #25592b 100%)', color: 'white',
-    padding: '30px 20px', display: 'flex', flexDirection: 'column', gap: '30px',
-    boxShadow: '4px 0 20px rgba(0,0,0,0.1)', zIndex: 40,
+    position: isMobile ? 'fixed' : 'static',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: '250px',
+    background: 'linear-gradient(180deg, #2f6b2f 0%, #25592b 100%)',
+    color: 'white',
+    padding: '30px 20px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '30px',
+    boxShadow: '4px 0 20px rgba(0,0,0,0.1)',
+    zIndex: 40,
     transform: isMobile ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)') : 'translateX(0)',
     transition: 'transform 0.3s ease-in-out'
   };
@@ -186,34 +155,45 @@ export default function ComplaintPage() {
 
   return (
     <div style={{ margin: 0, padding: 0, fontFamily: '"Segoe UI", sans-serif', background: 'linear-gradient(135deg, #e8ffe3 0%, #d0f5d0 100%)', display: 'flex', minHeight: '100vh' }}>
+      {/* Mobile toggle button */}
       {isMobile && (
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ position: 'fixed', top: '16px', left: '16px', zIndex: 50, padding: '8px 12px', background: '#2f6b2f', color: 'white', border: 'none', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', cursor: 'pointer', fontSize: '20px' }}>
           {isSidebarOpen ? '✕' : '☰'}
         </button>
       )}
 
+      {/* Mobile overlay */}
       {isSidebarOpen && isMobile && <div onClick={() => setIsSidebarOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 30 }} />}
 
+      {/* Sidebar */}
       <aside style={sidebarStyle}>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 700 }}>WasteCare</h2>
+
         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '20px', padding: 0, margin: 0, flex: 1 }}>
-          {menuItems.slice(0, -1).map((item, i) => (
+          {menuItems.map((item, i) => (
             <li key={i}>
               <a href={item.route} onClick={(e) => { e.preventDefault(); handleNavigation(item.route, item.name); }}
-                style={{ color: 'white', textDecoration: 'none', display: 'block', padding: '10px 15px', borderRadius: '8px', fontSize: '1.1rem', opacity: activeMenu === item.name ? 1 : 0.85, transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)', background: activeMenu === item.name ? 'rgba(255,255,255,0.1)' : 'transparent', transition: 'all 0.3s ease', cursor: 'pointer' }}
+                style={{
+                  color: 'white',
+                  textDecoration: 'none',
+                  display: 'block',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  fontSize: '1.1rem',
+                  opacity: activeMenu === item.name ? 1 : 0.85,
+                  transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)',
+                  background: activeMenu === item.name ? 'rgba(255,255,255,0.1)' : 'transparent',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
               >{item.name}</a>
             </li>
           ))}
         </ul>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-          <li>
-            <a href="/logout" onClick={(e) => { e.preventDefault(); handleNavigation('/logout', 'Logout'); }}
-              style={{ color: '#ffdddd', textDecoration: 'none', display: 'block', padding: '10px 15px', borderRadius: '8px', fontSize: '1.1rem', opacity: 0.85, transition: 'all 0.3s ease', cursor: 'pointer' }}
-            >Logout</a>
-          </li>
-        </ul>
+
       </aside>
 
+      {/* Main content */}
       <main style={{ flex: 1, padding: isMobile ? '24px' : '40px 50px', overflowY: 'auto' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '6px', color: '#1f5520' }}>Submit a Complaint</h1>
         <p style={{ opacity: 0.7, marginBottom: '25px', color: '#2f6b2f' }}>Report waste issues in your area. Our team will respond quickly.</p>
@@ -221,7 +201,7 @@ export default function ComplaintPage() {
         {/* Complaint Form */}
         <div style={{ background: 'rgba(255,255,255,0.85)', padding: '30px', borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.5)', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(90deg, #2f6b2f, #4a9d4a)' }} />
-          
+
           <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
             <label style={{ marginBottom: '8px', fontWeight: 600, color: '#2f6b2f', fontSize: '0.95rem' }}>Complaint Title *</label>
             <input type="text" placeholder="e.g., Garbage not picked up" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} style={inputStyle} />
@@ -260,7 +240,7 @@ export default function ComplaintPage() {
           </button>
         </div>
 
-        {/* User's Complaints */}
+        {/* Complaints Table */}
         <h2 style={{ marginBottom: '15px', color: '#1f5520', fontSize: '1.5rem' }}>Your Complaints</h2>
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}>
@@ -274,7 +254,7 @@ export default function ComplaintPage() {
           renderComplaintsTable(complaints)
         )}
 
-        {/* Admin Only - All Complaints */}
+        {/* Admin - All Complaints */}
         {user?.role === 'admin' && (
           <div style={{ marginTop: '40px' }}>
             <h2 style={{ marginBottom: '15px', color: '#1f5520', fontSize: '1.5rem' }}>All User Complaints (Admin)</h2>

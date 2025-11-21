@@ -10,14 +10,14 @@ export default function AuthSchedule() {
     ward: 5
   };
 
+  // Sidebar menu items
   const menuItems = [
     { name: 'Dashboard', route: '/dash' },
     { name: 'Pickup Requests', route: '/requestPickup' },
     { name: 'Payment', route: '/payment' },
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/schedule' },
-    { name: 'Profile', route: '/profile' },
-    { name: 'Logout', route: '/logout' }
+    { name: 'Profile', route: '/profile' }, // Keep Profile
   ];
 
   const handleNavigation = (route, itemName) => {
@@ -129,7 +129,7 @@ export default function AuthSchedule() {
           margin: 0,
           flex: 1
         }}>
-          {menuItems.slice(0, -1).map((item, index) => (
+          {menuItems.map((item, index) => (
             <li key={index}>
               <a 
                 href={item.route} 
@@ -169,40 +169,6 @@ export default function AuthSchedule() {
               </a>
             </li>
           ))}
-        </ul>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-          <li>
-            <a 
-              href={menuItems[menuItems.length - 1].route}
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation(menuItems[menuItems.length - 1].route, menuItems[menuItems.length - 1].name);
-              }}
-              style={{
-                color: '#ffdddd',
-                textDecoration: 'none',
-                display: 'block',
-                padding: '10px 15px',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
-                opacity: 0.85,
-                transition: 'all 0.3s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.opacity = 1;
-                e.target.style.transform = 'translateX(5px)';
-                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.opacity = 0.85;
-                e.target.style.transform = 'translateX(0)';
-                e.target.style.background = 'transparent';
-              }}
-            >
-              {menuItems[menuItems.length - 1].name}
-            </a>
-          </li>
         </ul>
       </aside>
 
@@ -275,86 +241,30 @@ export default function AuthSchedule() {
                 fontSize: '1rem'
               }}>
                 <thead>
-                  <tr style={{
-                    background: 'linear-gradient(135deg, #d7ffd2, #c5f5c0)'
-                  }}>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Ward No.</th>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Type of Waste</th>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Pickup Day</th>
-                    <th style={{
-                      padding: '16px',
-                      borderBottom: '1px solid #e0e0e0',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                      color: '#2f6b2f'
-                    }}>Time</th>
+                  <tr style={{ background: 'linear-gradient(135deg, #d7ffd2, #c5f5c0)' }}>
+                    <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Ward No.</th>
+                    <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Type of Waste</th>
+                    <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Pickup Day</th>
+                    <th style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left', fontWeight: 600, color: '#2f6b2f' }}>Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   {userSchedules.map((schedule) => (
-                    <tr 
-                      key={schedule.ward}
-                      style={{
-                        transition: 'background 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#f9fff8';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'transparent';
-                      }}
+                    <tr key={schedule.ward} style={{ transition: 'background 0.2s' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#f9fff8'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                     >
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>Ward {schedule.ward}</td>
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>{schedule.wasteType}</td>
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>{schedule.day}</td>
-                      <td style={{
-                        padding: '16px',
-                        borderBottom: '1px solid #e0e0e0',
-                        textAlign: 'left'
-                      }}>{schedule.time}</td>
+                      <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>Ward {schedule.ward}</td>
+                      <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{schedule.wasteType}</td>
+                      <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{schedule.day}</td>
+                      <td style={{ padding: '16px', borderBottom: '1px solid #e0e0e0', textAlign: 'left' }}>{schedule.time}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <div style={{ 
-              textAlign: 'center',
-              padding: '30px',
-              background: 'white',
-              borderRadius: '12px',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)'
-            }}>
+            <div style={{ textAlign: 'center', padding: '30px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)' }}>
               No schedule available for your ward.
             </div>
           )}
@@ -368,20 +278,10 @@ export default function AuthSchedule() {
           marginTop: '24px',
           boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)'
         }}>
-          <h3 style={{ 
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            marginBottom: '16px',
-            color: '#1f5520'
-          }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '16px', color: '#1f5520' }}>
             📌 Important Reminders
           </h3>
-          <ul style={{ 
-            listStyleType: 'disc',
-            paddingLeft: '30px',
-            lineHeight: '1.8',
-            color: '#2f6b2f'
-          }}>
+          <ul style={{ listStyleType: 'disc', paddingLeft: '30px', lineHeight: '1.8', color: '#2f6b2f' }}>
             <li>Please segregate your waste according to the type</li>
             <li>Keep your bins ready before the pickup time</li>
             <li>Do not mix different types of waste</li>

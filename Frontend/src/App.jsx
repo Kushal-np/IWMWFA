@@ -14,6 +14,10 @@ import ComplaintPage from "./Pages/Complaint/ComplaintPage";
 import ViewComplainRequests from "./AdminPages/Pages/ViewComplaintRequests";
 import ViewPickupRequests from "./AdminPages/Pages/ViewPickupRequests";
 import AllData from "./AdminPages/Pages/AllData";
+import Homepage from "./MarketPlace/Homepage";
+import ShoppingCart from "./MarketPlace/ShoppingCart";
+import HistoryPage from "./MarketPlace/History";
+import ProductDetailsPage from "./MarketPlace/ProductsDetailPage";
 function App() {
   return (
     <Routes>
@@ -37,7 +41,7 @@ function App() {
         }
       />  
       <Route path="/admin">
-         <Route path="complaint" element={<ViewComplainRequests/>} />
+         <Route path="Crequest" element={<ViewComplainRequests/>} />
          <Route path ="request" element ={<ViewPickupRequests/>} />
          <Route path ="dashboard" element={<AllData/>} />
       </Route>
@@ -52,7 +56,16 @@ function App() {
         /> */}
 
       {/* Catch all - redirect to landing */}
+      <Route path ="/marketPlace" >
+        <Route path ="" element={<Homepage/>} />
+        <Route path ="shoppingCart" element={<ShoppingCart/>} />
+        <Route path ="history" element={<HistoryPage/>} />
+        <Route path = "productDetails" element={<ProductDetailsPage/>}/>
+      </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
+
+      
     </Routes>
   );
 }

@@ -151,7 +151,6 @@ export const getDashboardData = async (req, res) => {
   }
 };
 
-// POST /api/admin/add-truck - Add new waste collection truck
 export const addTruck = async (req, res) => {
   try {
     const { driver_name, driver_contact, ward_no } = req.body;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import landing from "../assets/landing.png"
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../store/authSlice'; // Import logout action
+import { logout } from '../store/authSlice';
 
 export default function WasteCare() {
   const dispatch = useDispatch();
@@ -11,10 +11,9 @@ export default function WasteCare() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   
-  // Only log if user exists
   useEffect(() => {
     if (user) {
-      console.log('Logged in user:', user.email);
+      console.log('Logged in user:', user.email, 'Role:', user.role);
     }
   }, [user]);
 
@@ -41,6 +40,20 @@ export default function WasteCare() {
     navigate('/');
   };
 
+  // Handle dashboard navigation based on user role
+  const handleDashboardClick = (e) => {
+    e.preventDefault();
+    closeMenu();
+    
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard'); // Admin route
+      } else {
+        navigate('/dashboard'); // User route
+      }
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       const navbar = document.querySelector('.navbar');
@@ -53,7 +66,6 @@ export default function WasteCare() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isMenuOpen]);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -194,6 +206,37 @@ export default function WasteCare() {
           color: white !important;
         }
 
+        /* Dashboard button styles */
+        .dashboard-btn {
+          border-radius: 8px;
+          font-weight: 600;
+          padding: 8px 16px;
+          font-size: clamp(0.85rem, 1.2vw, 1rem);
+          text-decoration: none;
+          display: block;
+          transition: 0.3s ease;
+          cursor: pointer;
+          text-align: center;
+          color: white;
+        }
+
+        .dashboard-btn.user {
+          background-color: #28a745; /* green for user */
+        }
+
+        .dashboard-btn.user:hover {
+          background-color: #218838; /* darker green */
+        }
+
+        .dashboard-btn.admin {
+          background-color: #ff4444; /* red for admin */
+        }
+
+        .dashboard-btn.admin:hover {
+          background-color: #cc0000; /* darker red */
+        }
+
+        /* Hero Section */
         .hero {
           min-height: var(--hero-height);
           width: 100%;
@@ -244,17 +287,6 @@ export default function WasteCare() {
           line-height: 1.4;
         }
 
-        @media (min-width: 721px) {
-          .hero-text p {
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 2px solid #d4ffd4;
-            width: 0;
-            animation: typing 4s steps(120, end) forwards, blink 0.75s step-end infinite;
-            animation-delay: 0.5s;
-          }
-        }
-
         .box {
           max-width: min(550px, 90%);
           padding: clamp(20px, 4vw, 32px);
@@ -286,61 +318,7 @@ export default function WasteCare() {
           border-radius: 12px;
         }
 
-        @media (max-width: 1024px) {
-          .hero {
-            background-position: 75% center;
-          }
-
-          .box {
-            max-width: min(500px, 85%);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .navbar {
-            padding: 12px 20px;
-          }
-
-          .hamburger {
-            display: flex;
-          }
-
-          .nav-links {
-            position: fixed;
-            top: 0;
-            right: ${isMenuOpen ? '0' : '-100%'};
-            height: 100vh;
-            width: 70%;
-            max-width: 300px;
-            background: rgba(47, 107, 47, 0.98);
-            backdrop-filter: blur(10px);
-            flex-direction: column;
-            justify-content: center;
-            gap: 30px;
-            transition: right 0.4s ease;
-            padding: 40px;
-          }
-
-          .nav-links li a, .nav-links li button {
-            font-size: 1.1rem;
-            padding: 12px 20px;
-          }
-
-          .hero {
-            background-position: 70% center;
-          }
-        }
-
         @media (max-width: 720px) {
-          .hero {
-            background-image: linear-gradient(180deg, rgba(47, 107, 47, 0.3), rgba(47, 107, 47, 0.5)),
-                              url("https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800");
-            background-position: center;
-            padding-top: 90px;
-            align-items: center;
-            justify-content: flex-start;
-          }
-
           .hero-text {
             text-align: center;
             margin: 30px auto 20px;
@@ -361,75 +339,6 @@ export default function WasteCare() {
             margin: 20px auto 40px;
             text-align: center;
           }
-        }
-
-        @media (max-width: 450px) {
-          .hero {
-            padding-top: 80px;
-          }
-
-          .hero-text {
-            margin-top: 20px;
-          }
-
-          .hero-text h1 {
-            font-size: 2rem;
-          }
-
-          .hero-text p {
-            font-size: 0.95rem;
-          }
-
-          .box {
-            padding: 20px;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-          }
-
-          .nav-links {
-            width: 80%;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .logo {
-            font-size: 1.1rem;
-          }
-
-          .hero-text h1 {
-            font-size: 1.8rem;
-          }
-
-          .box {
-            padding: 16px;
-          }
-        }
-
-        @media (max-height: 600px) and (orientation: landscape) {
-          .hero {
-            min-height: auto;
-            padding-top: 80px;
-            padding-bottom: 40px;
-          }
-
-          .hero-text {
-            margin-top: 20px;
-          }
-
-          .box {
-            margin-top: 20px;
-            margin-bottom: 30px;
-          }
-        }
-
-        @keyframes typing {
-          from { width: 0; }
-          to { width: 100%; }
-        }
-
-        @keyframes blink {
-          0%, 100% { border-color: transparent; }
-          50% { border-color: #d4ffd4; }
         }
 
         @keyframes fadeInBox {
@@ -458,14 +367,19 @@ export default function WasteCare() {
           <li><Link to="/schedule" onClick={closeMenu}>Schedule</Link></li>
           <li><a onClick={closeMenu}>Resources</a></li>
 
-          {/* Conditional rendering based on user authentication */}
           {!user ? (
-            // Show only Login button if user is NOT logged in
             <li><Link to="/auth" className="login-btn" onClick={closeMenu}>Login</Link></li>
           ) : (
-            // Show Dashboard and Logout if user IS logged in
             <>
-              <li><Link to="/dashboard" className="login-btn" onClick={closeMenu}>Dashboard</Link></li>
+              <li>
+                <a
+                  href="#"
+                  onClick={handleDashboardClick}
+                  className={`dashboard-btn ${user.role === 'admin' ? 'admin' : 'user'}`}
+                >
+                  {user.role === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
+                </a>
+              </li>
               <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
             </>
           )}
@@ -474,20 +388,17 @@ export default function WasteCare() {
 
       {/* HERO SECTION */}
       <main className="hero" role="main" aria-label="Recycling illustration hero">
-        {/* Main Hero Title */}
         <div className="hero-text">
           <h1>WasteCare</h1>
           <p>"Clean streets, green minds, better tomorrow."</p>
         </div>
 
-        {/* Hero Text Box */}
         <div className="box">
           <p>
             Every piece of waste tells a story. Our platform ensures that no trash is left behind. From scheduling pickups to online bill payments, residents and businesses are empowered to maintain a cleaner, healthier city. Together, we can turn inefficient waste management into a sustainable, seamless experience.
           </p>
         </div>
 
-        {/* Mobile Image */}
         <img 
           className="mobile-image" 
           src={landing} 

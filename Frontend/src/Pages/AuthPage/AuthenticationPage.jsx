@@ -26,7 +26,7 @@ export const AuthenticationPage = () => {
     onSuccess: (data) => {
       // Only dispatch user data, cookie is automatically set by server
       dispatch(setUser({ user: data.user }));
-      navigate("/dashboard");
+      navigate("/");
     },
     onError: (err) => {
       setError(err.response?.data?.message || "Login failed");
@@ -38,7 +38,7 @@ export const AuthenticationPage = () => {
     onSuccess: (data) => {
       // Only dispatch user data, cookie is automatically set by server
       dispatch(setUser({ user: data.user }));
-      navigate("/dashboard");
+      navigate("/");
     },
     onError: (err) => {
       setError(err.response?.data?.message || "Signup failed");

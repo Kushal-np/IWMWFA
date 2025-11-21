@@ -13,5 +13,5 @@ const router = express.Router();
 router.post("/create", isAuthenticated, upload.single("image"), createComplaint); 
 router.get("/my-complaints", isAuthenticated, authorizeRoles("admin" , "business") ,  getMyComplaints);
 router.get("/all", isAuthenticated, authorizeRoles("admin"), getAllComplaints);
-
+router.put("/status/:id" , isAuthenticated , authorizeRoles("admin" ) ,updateComplaintStatus  )
 export default router;

@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllComplaints } from "../../api/adminApi";
-import { setAllComplaints } from "../../store/adminSlice";
-import SideBar from "../components/SideBar"; // import the reusable sidebar
+
+import { setAllComplaints, updateComplaintStatusInStore } from "../../store/complaintSlice";
+import SideBar from "../components/SideBar";
+import { updateComplaintStatus } from "../../api/complaint";
 
 export default function ViewComplainRequests() {
   const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState("View Complaints");
   const [isMobile, setIsMobile] = useState(false);
-  const admin = useSelector((state) => state.admin);
+  const admin = useSelector((state) => state.complaint);
 
   // Fetch complaints
   const { data, isLoading, isError, error } = useQuery({
@@ -40,14 +42,23 @@ export default function ViewComplainRequests() {
     switch (status?.toLowerCase()) {
       case "pending":
         return { background: "linear-gradient(135deg, #f59e0b, #d97706)", color: "white" };
-      case "in-progress":
+      case "verified":
         return { background: "linear-gradient(135deg, #3b82f6, #2563eb)", color: "white" };
       case "resolved":
         return { background: "linear-gradient(135deg, #2f6b2f, #3a7d3a)", color: "white" };
-      case "rejected":
-        return { background: "linear-gradient(135deg, #ef4444, #dc2626)", color: "white" };
       default:
         return { background: "#999", color: "white" };
+    }
+  };
+
+  // Handle Verify button click
+  const handleVerify = async (id) => {
+    try {
+      const response = await updateComplaintStatus(id, "verified");
+      // Update Redux store
+      dispatch(updateComplaintStatusInStore({ id, status: "verified" }));
+    } catch (err) {
+      console.error("Error verifying complaint:", err);
     }
   };
 
@@ -55,9 +66,9 @@ export default function ViewComplainRequests() {
   const renderComplaints = () => {
     if (isLoading) return <p>Loading complaints...</p>;
     if (isError) return <p style={{ color: "red" }}>Error loading complaints</p>;
-    if (!admin?.complaints?.length) return <p>No complaints found.</p>;
+    if (!admin?.allComplaints?.length) return <p>No complaints found.</p>;
 
-    return admin.complaints.map((c) => (
+    return admin.allComplaints.map((c) => (
       <div
         key={c._id}
         style={{
@@ -115,6 +126,25 @@ export default function ViewComplainRequests() {
         <p style={{ opacity: 0.6 }}>
           <strong>Date:</strong> {new Date(c.createdAt).toLocaleString()}
         </p>
+
+        {/* Verify button */}
+        {c.status === "pending" && (
+          <button
+            onClick={() => handleVerify(c._id)}
+            style={{
+              marginTop: 10,
+              padding: "8px 16px",
+              borderRadius: 8,
+              border: "none",
+              background: "#2563eb",
+              color: "white",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Verify
+          </button>
+        )}
       </div>
     ));
   };

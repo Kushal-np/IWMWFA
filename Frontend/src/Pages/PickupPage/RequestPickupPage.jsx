@@ -41,6 +41,7 @@ export default function PickupPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Menu items without Logout
   const menuItems = [
     { name: 'Dashboard', route: '/dash' },
     { name: 'Pickup Requests', route: '/requestPickup' },
@@ -48,7 +49,6 @@ export default function PickupPage() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' },
-    { name: 'Logout', route: '/logout' }
   ];
 
   const handleNavigation = (route, itemName) => {
@@ -201,7 +201,7 @@ export default function PickupPage() {
           margin: 0,
           flex: 1
         }}>
-          {menuItems.slice(0, -1).map((item, i) => (
+          {menuItems.map((item, i) => (
             <li key={i}>
               <a 
                 href={item.route} 
@@ -226,28 +226,6 @@ export default function PickupPage() {
               </a>
             </li>
           ))}
-        </ul>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-          <li>
-            <a 
-              href="/logout" 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/logout', 'Logout');
-              }}
-              style={{
-                color: '#ffdddd',
-                textDecoration: 'none',
-                display: 'block',
-                padding: '10px 15px',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
-                opacity: 0.85
-              }}
-            >
-              Logout
-            </a>
-          </li>
         </ul>
       </aside>
 

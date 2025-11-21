@@ -9,8 +9,8 @@ const SideBar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const menuItems = [
-    { name: "Dashboard", route: "/admin/dashboard" },
-    { name: "View Complaints", route: "/admin/complaints" },
+    { name: "Analytics", route: "/admin/dashboard" },
+    { name: "View Complaints", route: "/admin/Crequest" },
     { name: "Manage Pickups", route: "/admin/request" },
     { name: "Reports", route: "/admin/reports" },
     { name: "Settings", route: "/admin/settings" },
