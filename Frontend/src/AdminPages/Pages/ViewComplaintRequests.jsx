@@ -8,8 +8,10 @@ import SideBar from "../components/SideBar"; // import the reusable sidebar
 export default function ViewComplainRequests() {
   const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState("View Complaints");
+  const [isMobile, setIsMobile] = useState(false);
   const admin = useSelector((state) => state.admin);
 
+  // Fetch complaints
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["allComplaints"],
     queryFn: getAllComplaints,
@@ -25,6 +27,15 @@ export default function ViewComplainRequests() {
     if (isError) console.log("QUERY ERROR:", error);
   }, [isError, error]);
 
+  // Detect mobile view
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 780);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Status styling
   const getStatusStyle = (status) => {
     switch (status?.toLowerCase()) {
       case "pending":
@@ -40,100 +51,78 @@ export default function ViewComplainRequests() {
     }
   };
 
-  const renderComplaints = () => (
-    <div>
-      <h1 style={{ fontSize: "2rem", marginBottom: "6px", color: "#1f5520" }}>
-        All Complaints
-      </h1>
-      <p style={{ opacity: 0.6, marginBottom: "25px", color: "#2f6b2f" }}>
-        View and manage all submitted complaints from users
-      </p>
+  // Render all complaints
+  const renderComplaints = () => {
+    if (isLoading) return <p>Loading complaints...</p>;
+    if (isError) return <p style={{ color: "red" }}>Error loading complaints</p>;
+    if (!admin?.complaints?.length) return <p>No complaints found.</p>;
 
-      {isLoading && <p>Loading complaints...</p>}
-      {isError && <p style={{ color: "red" }}>Error loading complaints</p>}
-      {!isLoading && !admin?.complaints?.length && <p>No complaints found.</p>}
-
-      {admin?.complaints?.map((c) => (
-        <div
-          key={c._id}
-          style={{
-            background: "white",
-            padding: 20,
-            borderRadius: 12,
-            marginBottom: 15,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-          }}
-        >
-          <div
+    return admin.complaints.map((c) => (
+      <div
+        key={c._id}
+        style={{
+          background: "white",
+          padding: 20,
+          borderRadius: 12,
+          marginBottom: 15,
+          boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 10 }}>
+          <h3 style={{ margin: 0, color: "#1f5520" }}>{c.title}</h3>
+          <span
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "start",
-              marginBottom: 10,
+              padding: "6px 12px",
+              borderRadius: "20px",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              ...getStatusStyle(c.status),
             }}
           >
-            <h3 style={{ margin: 0, color: "#1f5520" }}>{c.title}</h3>
-            <span
-              style={{
-                padding: "6px 12px",
-                borderRadius: "20px",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                textTransform: "uppercase",
-                ...getStatusStyle(c.status),
-              }}
-            >
-              {c.status}
-            </span>
-          </div>
-
-          {c.image && (
-            <img
-              src={c.image}
-              alt="complaint"
-              style={{
-                width: "100%",
-                maxHeight: 200,
-                objectFit: "cover",
-                borderRadius: 10,
-                marginBottom: 10,
-              }}
-            />
-          )}
-
-          <p>
-            <strong>Description:</strong> {c.description}
-          </p>
-          <p>
-            <strong>Location:</strong> {c.location}
-          </p>
-          <p>
-            <strong>Category:</strong> {c.category}
-          </p>
-
-          <p style={{ marginTop: 10, opacity: 0.7 }}>
-            <strong>Submitted By:</strong> {c?.user?.fullName} ({c?.user?.email})
-          </p>
-
-          <p style={{ opacity: 0.6 }}>
-            <strong>Date:</strong> {new Date(c.createdAt).toLocaleString()}
-          </p>
+            {c.status}
+          </span>
         </div>
-      ))}
-    </div>
-  );
+
+        {c.image && (
+          <img
+            src={c.image}
+            alt="complaint"
+            style={{
+              width: "100%",
+              maxHeight: 200,
+              objectFit: "cover",
+              borderRadius: 10,
+              marginBottom: 10,
+            }}
+          />
+        )}
+
+        <p>
+          <strong>Description:</strong> {c.description}
+        </p>
+        <p>
+          <strong>Location:</strong> {c.location}
+        </p>
+        <p>
+          <strong>Category:</strong> {c.category}
+        </p>
+
+        <p style={{ marginTop: 10, opacity: 0.7 }}>
+          <strong>Submitted By:</strong> {c?.user?.fullName} ({c?.user?.email})
+        </p>
+
+        <p style={{ opacity: 0.6 }}>
+          <strong>Date:</strong> {new Date(c.createdAt).toLocaleString()}
+        </p>
+      </div>
+    ));
+  };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        fontFamily: '"Segoe UI", sans-serif',
-        background: "linear-gradient(135deg, #e8ffe3 0%, #d0f5d0 100%)",
-      }}
-    >
-      <SideBar /> {/* Reusable sidebar */}
-      <main style={{ flex: 1, padding: "40px 50px", overflowY: "auto" }}>
+    <div style={{ display: "flex", minHeight: "100vh", fontFamily: '"Segoe UI", sans-serif' }}>
+      <SideBar activeMenu={activeMenu} setActiveMenu={setActiveMenu} isMobile={isMobile} />
+      <main style={{ flex: 1, padding: isMobile ? "70px 24px 24px" : "40px 50px", overflowY: "auto" }}>
         {activeMenu === "View Complaints" && renderComplaints()}
       </main>
     </div>

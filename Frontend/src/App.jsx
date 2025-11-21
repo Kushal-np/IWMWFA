@@ -13,6 +13,7 @@ import ProfilePage from "./Pages/Profile/ProfilePage";
 import ComplaintPage from "./Pages/Complaint/ComplaintPage";
 import ViewComplainRequests from "./AdminPages/Pages/ViewComplaintRequests";
 import ViewPickupRequests from "./AdminPages/Pages/ViewPickupRequests";
+import AllData from "./AdminPages/Pages/AllData";
 function App() {
   return (
     <Routes>
@@ -38,6 +39,7 @@ function App() {
       <Route path="/admin">
          <Route path="complaint" element={<ViewComplainRequests/>} />
          <Route path ="request" element ={<ViewPickupRequests/>} />
+         <Route path ="dashboard" element={<AllData/>} />
       </Route>
       {/* Admin Only Routes */}
       {/* <Route 

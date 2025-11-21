@@ -11,8 +11,7 @@ const SideBar = () => {
   const menuItems = [
     { name: "Dashboard", route: "/admin/dashboard" },
     { name: "View Complaints", route: "/admin/complaints" },
-    { name: "Manage Pickups", route: "/admin/pickups" },
-    { name: "Users", route: "/admin/users" },
+    { name: "Manage Pickups", route: "/admin/request" },
     { name: "Reports", route: "/admin/reports" },
     { name: "Settings", route: "/admin/settings" },
     { name: "Logout", route: "/logout" },
