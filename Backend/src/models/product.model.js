@@ -36,6 +36,9 @@ const productSchema = new mongoose.Schema(
       },
       min: 0,
     },
+        condition: { // ✅ Added this field
+      type: String,
+    },
     images: [{
       type: String, // Cloudinary URLs
     }],

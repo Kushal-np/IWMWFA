@@ -1,18 +1,78 @@
 import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { getProductById, addToCart } from "../api/productApi"; // Update path to your api file
+import { setCart } from "../store/productSlice";
 
 const ProductDetailsPage = () => {
-  const [mainImage, setMainImage] = useState(
-    "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=600&h=600&fit=crop"
-  );
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  const [mainImage, setMainImage] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
 
-  const thumbnails = [
-    "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=600&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1621447504864-d8686e12698c?w=600&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1610372410814-86f0927451cb?w=600&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=600&h=600&fit=crop",
-  ];
+  // Fetch product details using TanStack Query
+  const {
+    data: productData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(id),
+    enabled: !!id,
+    onSuccess: (data) => {
+      if (data?.product?.images?.length > 0) {
+        setMainImage(data.product.images[0]);
+      }
+    },
+  });
+
+  // Add to cart mutation
+  const addToCartMutation = useMutation({
+    mutationFn: ({ productId, qty }) => addToCart(productId, qty),
+    onSuccess: (data) => {
+      if (data.success) {
+        dispatch(setCart(data.cart));
+        queryClient.invalidateQueries(["cart"]);
+        alert("Product added to cart successfully!");
+      }
+    },
+    onError: (error) => {
+      alert(error.response?.data?.message || "Failed to add to cart");
+    },
+  });
+
+  const product = productData?.product;
+
+  const handleQuantityChange = (type) => {
+    if (type === "increase") {
+      setQuantity((prev) => Math.min(prev + 1, product?.quantity || 100));
+    } else {
+      setQuantity((prev) => Math.max(prev - 1, 1));
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    addToCartMutation.mutate({ productId: product._id, qty: quantity });
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    addToCartMutation.mutate(
+      { productId: product._id, qty: quantity },
+      {
+        onSuccess: () => {
+          navigate("/marketPlace/shoppingCart");
+        },
+      }
+    );
+  };
 
   const colors = {
     green: "#2e7d32",
@@ -27,7 +87,6 @@ const ProductDetailsPage = () => {
     yellow: "#ffc107",
     radius: "16px",
     shadow: "0 4px 20px rgba(0,0,0,0.08)",
-    shadowHover: "0 8px 30px rgba(46,125,50,0.15)",
   };
 
   const styles = {
@@ -52,7 +111,6 @@ const ProductDetailsPage = () => {
     logo: {
       width: "48px",
       height: "48px",
-      transition: "transform 0.3s ease",
       cursor: "pointer",
     },
     headerTitle: {
@@ -61,41 +119,42 @@ const ProductDetailsPage = () => {
       background: `linear-gradient(135deg, ${colors.green}, ${colors.lightGreen})`,
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
-      backgroundClip: "text",
       marginLeft: "1rem",
     },
-    searchInput: {
-      padding: "0.75rem 1rem 0.75rem 3rem",
-      width: "320px",
-      borderRadius: "50px",
-      border: `2px solid ${colors.border}`,
-      fontSize: "0.95rem",
-      background: colors.bg,
-    },
-    navbar: {
-      background: colors.white,
-      borderBottom: `1px solid ${colors.border}`,
-      padding: "0.75rem 2rem",
-      boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-      display: "flex",
-      justifyContent: "center",
-      gap: "0.5rem",
-      flexWrap: "wrap",
-    },
-    navItem: (active) => ({
-      padding: "0.7rem 1.5rem",
-      borderRadius: "50px",
-      cursor: "pointer",
-      fontWeight: 500,
-      color: active ? colors.white : colors.textDark,
-      background: active ? `linear-gradient(135deg, ${colors.green}, ${colors.accent})` : "transparent",
-      boxShadow: active ? "0 4px 15px rgba(46,125,50,0.3)" : "none",
-      transition: "all 0.3s ease",
-    }),
     main: {
       maxWidth: "1200px",
       margin: "2rem auto",
       padding: "0 2rem 3rem",
+    },
+    loadingContainer: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "60vh",
+      fontSize: "1.2rem",
+      color: colors.textLight,
+    },
+    errorContainer: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "60vh",
+      gap: "1rem",
+    },
+    errorText: {
+      fontSize: "1.2rem",
+      color: colors.red,
+    },
+    backButton: {
+      padding: "0.75rem 1.5rem",
+      background: colors.green,
+      color: colors.white,
+      border: "none",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontSize: "1rem",
+      fontWeight: 600,
     },
     productContainer: {
       display: "grid",
@@ -170,64 +229,79 @@ const ProductDetailsPage = () => {
       fontWeight: 700,
       color: colors.green,
     },
-    originalPrice: {
-      fontSize: "1.3rem",
-      color: colors.textLight,
-      textDecoration: "line-through",
-    },
-    discountBadge: {
-      background: colors.red,
-      color: colors.white,
-      padding: "0.3rem 0.8rem",
-      borderRadius: "8px",
-      fontSize: "0.9rem",
-      fontWeight: 600,
-    },
     divider: {
       height: "1px",
       background: colors.border,
       margin: "1.5rem 0",
     },
     infoSection: { marginBottom: "1.5rem" },
-    infoLabel: { fontWeight: 600, color: colors.textDark, marginBottom: "0.5rem", fontSize: "0.95rem" },
+    infoLabel: {
+      fontWeight: 600,
+      color: colors.textDark,
+      marginBottom: "0.5rem",
+      fontSize: "0.95rem",
+    },
     infoValue: { color: colors.textLight, lineHeight: 1.6 },
-    quantitySelector: { display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" },
-    quantityControls: { display: "flex", alignItems: "center", border: `2px solid ${colors.border}`, borderRadius: "12px", overflow: "hidden" },
-    quantityBtn: { width: "40px", height: "40px", border: "none", background: colors.bg, cursor: "pointer", fontSize: "1.2rem", transition: "all 0.3s ease", color: colors.textDark },
-    quantityInput: { width: "60px", height: "40px", border: "none", textAlign: "center", fontWeight: 600, fontSize: "1rem" },
+    quantitySelector: {
+      display: "flex",
+      alignItems: "center",
+      gap: "1rem",
+      marginBottom: "1.5rem",
+    },
+    quantityControls: {
+      display: "flex",
+      alignItems: "center",
+      border: `2px solid ${colors.border}`,
+      borderRadius: "12px",
+      overflow: "hidden",
+    },
+    quantityBtn: {
+      width: "40px",
+      height: "40px",
+      border: "none",
+      background: colors.bg,
+      cursor: "pointer",
+      fontSize: "1.2rem",
+      transition: "all 0.3s ease",
+      color: colors.textDark,
+    },
+    quantityInput: {
+      width: "60px",
+      height: "40px",
+      border: "none",
+      textAlign: "center",
+      fontWeight: 600,
+      fontSize: "1rem",
+    },
     stockInfo: { color: colors.green, fontSize: "0.9rem", fontWeight: 500 },
     actionButtons: { display: "flex", gap: "1rem", marginBottom: "1.5rem" },
-    btn: (primary) => ({
+    btn: (primary, disabled) => ({
       flex: 1,
       padding: "1rem",
       border: "none",
       borderRadius: "12px",
       fontSize: "1rem",
       fontWeight: 600,
-      cursor: "pointer",
+      cursor: disabled ? "not-allowed" : "pointer",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       gap: "0.5rem",
-      background: primary ? `linear-gradient(135deg, ${colors.green}, ${colors.accent})` : colors.white,
+      background: primary
+        ? `linear-gradient(135deg, ${colors.green}, ${colors.accent})`
+        : colors.white,
       color: primary ? colors.white : colors.green,
       border: primary ? "none" : `2px solid ${colors.green}`,
       transition: "all 0.3s ease",
+      opacity: disabled ? 0.6 : 1,
     }),
-    sellerCard: {
-      background: colors.bg,
-      padding: "1.5rem",
-      borderRadius: "12px",
-      marginBottom: "1.5rem",
+    tabs: {
+      background: colors.white,
+      borderRadius: colors.radius,
+      boxShadow: colors.shadow,
+      overflow: "hidden",
+      marginTop: "2rem",
     },
-    sellerHeader: { display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" },
-    sellerAvatar: { width: "50px", height: "50px", borderRadius: "50%", background: `linear-gradient(135deg, ${colors.green}, ${colors.accent})`, display: "flex", alignItems: "center", justifyContent: "center", color: colors.white, fontSize: "1.5rem", fontWeight: 700 },
-    sellerInfoName: { color: colors.textDark, marginBottom: "0.25rem" },
-    sellerRating: { color: colors.textLight, fontSize: "0.85rem" },
-    sellerStats: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginTop: "1rem" },
-    statValue: { fontWeight: 700, color: colors.green, fontSize: "1.1rem", textAlign: "center" },
-    statLabel: { color: colors.textLight, fontSize: "0.8rem", textAlign: "center" },
-    tabs: { background: colors.white, borderRadius: colors.radius, boxShadow: colors.shadow, overflow: "hidden" },
     tabHeaders: { display: "flex", borderBottom: `1px solid ${colors.border}` },
     tabHeader: (active) => ({
       flex: 1,
@@ -240,102 +314,302 @@ const ProductDetailsPage = () => {
       borderBottom: active ? `3px solid ${colors.green}` : "none",
       transition: "all 0.3s ease",
     }),
-    tabContent: { padding: "2rem", display: "block", animation: "fadeIn 0.4s ease" },
+    tabContent: { padding: "2rem" },
+    sellerCard: {
+      background: colors.bg,
+      padding: "1.5rem",
+      borderRadius: "12px",
+      marginTop: "1.5rem",
+    },
+    sellerHeader: {
+      display: "flex",
+      alignItems: "center",
+      gap: "1rem",
+      marginBottom: "1rem",
+    },
+    sellerAvatar: {
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+      background: `linear-gradient(135deg, ${colors.green}, ${colors.accent})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: colors.white,
+      fontSize: "1.5rem",
+      fontWeight: 700,
+    },
+    sellerName: {
+      fontWeight: 600,
+      color: colors.textDark,
+      fontSize: "1.1rem",
+    },
   };
 
-  const handleQuantityChange = (type) => {
-    if (type === "increase") setQuantity((prev) => Math.min(prev + 1, 100));
-    else setQuantity((prev) => Math.max(prev - 1, 1));
-  };
+  // Loading state
+  if (isLoading) {
+    return (
+      <div style={styles.body}>
+        <header style={styles.header}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              style={styles.logo}
+              src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+              alt="Logo"
+              onClick={() => navigate("/marketPlace")}
+            />
+            <h1 style={styles.headerTitle}>Recycle Reuse Reduce</h1>
+          </div>
+        </header>
+        <main style={styles.main}>
+          <div style={styles.loadingContainer}>Loading product details...</div>
+        </main>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError || !product) {
+    return (
+      <div style={styles.body}>
+        <header style={styles.header}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              style={styles.logo}
+              src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+              alt="Logo"
+              onClick={() => navigate("/marketPlace")}
+            />
+            <h1 style={styles.headerTitle}>Recycle Reuse Reduce</h1>
+          </div>
+        </header>
+        <main style={styles.main}>
+          <div style={styles.errorContainer}>
+            <div style={styles.errorText}>
+              {error?.response?.data?.message || "Product not found"}
+            </div>
+            <button
+              style={styles.backButton}
+              onClick={() => navigate("/marketPlace")}
+            >
+              Back to Products
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const isOutOfStock = product.status !== "available" || product.quantity === 0;
 
   return (
     <div style={styles.body}>
       {/* Header */}
       <header style={styles.header}>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <img style={styles.logo} src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Logo" />
+          <img
+            style={styles.logo}
+            src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+            alt="Logo"
+            onClick={() => navigate("/marketPlace")}
+          />
           <h1 style={styles.headerTitle}>Recycle Reuse Reduce</h1>
         </div>
-        <input style={styles.searchInput} type="search" placeholder="Search eco-friendly products..." />
       </header>
-
-      {/* Navbar */}
-      <nav style={styles.navbar}>
-        {["Home", "Sell", "Cart", "Order", "History", "Custom", "Dashboard"].map((nav, idx) => (
-          <div key={idx} style={styles.navItem(nav === "Home")}>{nav}</div>
-        ))}
-      </nav>
 
       <main style={styles.main}>
         <div style={styles.productContainer}>
           {/* Product Images */}
           <div style={styles.productImages}>
             <div style={styles.mainImage}>
-              <img src={mainImage} alt="Product" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s ease" }} />
+              <img
+                src={mainImage || product.images[0] || "https://via.placeholder.com/600"}
+                alt={product.name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
             </div>
-            <div style={styles.thumbnailGrid}>
-              {thumbnails.map((thumb, idx) => (
-                <div
-                  key={idx}
-                  style={styles.thumbnail(mainImage === thumb)}
-                  onClick={() => setMainImage(thumb)}
-                >
-                  <img src={thumb} alt={`View ${idx + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-              ))}
-            </div>
+            {product.images && product.images.length > 1 && (
+              <div style={styles.thumbnailGrid}>
+                {product.images.slice(0, 4).map((img, idx) => (
+                  <div
+                    key={idx}
+                    style={styles.thumbnail(mainImage === img)}
+                    onClick={() => setMainImage(img)}
+                  >
+                    <img
+                      src={img}
+                      alt={`View ${idx + 1}`}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Details */}
           <div style={styles.productDetails}>
-            <span style={styles.productBadge}>♻️ Eco-Friendly</span>
-            <h1 style={styles.productTitle}>Premium Recycled Plastic Bottles</h1>
-            <div style={styles.productRating}>★★★★★ <span style={{ marginLeft: "0.5rem", fontSize: "0.9rem", color: colors.textLight }}>4.8 (127 reviews)</span></div>
-            <div style={styles.productPrice}>
-              <span style={styles.currentPrice}>Rs. 1,000</span>
-              <span style={styles.originalPrice}>Rs. 1,500</span>
-              <span style={styles.discountBadge}>33% OFF</span>
+            <span style={styles.productBadge}>
+              ♻️ {product.listingType === "donation" ? "Free" : "For Sale"}
+            </span>
+            <h1 style={styles.productTitle}>{product.name}</h1>
+
+            <div style={styles.productRating}>
+              ★★★★★{" "}
+              <span style={{ marginLeft: "0.5rem", fontSize: "0.9rem", color: colors.textLight }}>
+                {product.views || 0} views
+              </span>
             </div>
+
+            {product.listingType === "sale" && (
+              <div style={styles.productPrice}>
+                <span style={styles.currentPrice}>Rs. {product.price}</span>
+              </div>
+            )}
+
+            {product.listingType === "donation" && (
+              <div style={styles.productPrice}>
+                <span style={{ ...styles.currentPrice, fontSize: "1.8rem" }}>
+                  FREE
+                </span>
+              </div>
+            )}
+
             <div style={styles.divider}></div>
+
             <div style={styles.infoSection}>
               <div style={styles.infoLabel}>Description</div>
-              <div style={styles.infoValue}>High-quality recycled plastic bottles, thoroughly cleaned and sanitized. Perfect for crafting, DIY projects, or industrial use. Each bottle is inspected for quality and sorted by size and condition.</div>
+              <div style={styles.infoValue}>{product.description}</div>
+            </div>
+
+            <div style={styles.infoSection}>
+              <div style={styles.infoLabel}>Category</div>
+              <div style={styles.infoValue}>{product.category}</div>
+            </div>
+
+            <div style={styles.infoSection}>
+              <div style={styles.infoLabel}>Condition</div>
+              <div style={styles.infoValue}>
+                {product.condition?.charAt(0).toUpperCase() + product.condition?.slice(1)}
+              </div>
+            </div>
+
+            <div style={styles.infoSection}>
+              <div style={styles.infoLabel}>Location</div>
+              <div style={styles.infoValue}>
+                {product.location} (Ward {product.ward_no})
+              </div>
             </div>
 
             <div style={styles.quantitySelector}>
               <div style={styles.infoLabel}>Quantity:</div>
               <div style={styles.quantityControls}>
-                <button style={styles.quantityBtn} onClick={() => handleQuantityChange("decrease")}>-</button>
-                <input style={styles.quantityInput} type="number" value={quantity} readOnly />
-                <button style={styles.quantityBtn} onClick={() => handleQuantityChange("increase")}>+</button>
+                <button
+                  style={styles.quantityBtn}
+                  onClick={() => handleQuantityChange("decrease")}
+                  disabled={isOutOfStock}
+                >
+                  -
+                </button>
+                <input
+                  style={styles.quantityInput}
+                  type="number"
+                  value={quantity}
+                  readOnly
+                />
+                <button
+                  style={styles.quantityBtn}
+                  onClick={() => handleQuantityChange("increase")}
+                  disabled={isOutOfStock}
+                >
+                  +
+                </button>
               </div>
-              <span style={styles.stockInfo}>✓ 250 pieces in stock</span>
+              <span style={styles.stockInfo}>
+                {isOutOfStock ? (
+                  <span style={{ color: colors.red }}>✗ Out of stock</span>
+                ) : (
+                  `✓ ${product.quantity} pieces in stock`
+                )}
+              </span>
             </div>
 
             <div style={styles.actionButtons}>
-              <button style={styles.btn(false)}>🛒 Add to Cart</button>
-              <button style={styles.btn(true)}>⚡ Buy Now</button>
+              <button
+                style={styles.btn(false, isOutOfStock || addToCartMutation.isLoading)}
+                onClick={handleAddToCart}
+                disabled={isOutOfStock || addToCartMutation.isLoading}
+              >
+                🛒 {addToCartMutation.isLoading ? "Adding..." : "Add to Cart"}
+              </button>
+              <button
+                style={styles.btn(true, isOutOfStock || addToCartMutation.isLoading)}
+                onClick={handleBuyNow}
+                disabled={isOutOfStock || addToCartMutation.isLoading}
+              >
+                ⚡ Buy Now
+              </button>
             </div>
+
+            {/* Seller Info */}
+            {product.seller && (
+              <div style={styles.sellerCard}>
+                <div style={styles.sellerHeader}>
+                  <div style={styles.sellerAvatar}>
+                    {product.seller.fullName?.charAt(0).toUpperCase() || "S"}
+                  </div>
+                  <div>
+                    <div style={styles.sellerName}>{product.seller.fullName}</div>
+                    <div style={{ color: colors.textLight, fontSize: "0.85rem" }}>
+                      Ward {product.seller.ward_no}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Tabs */}
         <div style={styles.tabs}>
           <div style={styles.tabHeaders}>
-            {["specifications", "reviews", "questions"].map((tab) => (
-              <button
-                key={tab}
-                style={styles.tabHeader(activeTab === tab)}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab === "reviews" ? `Reviews (127)` : tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
+            <button
+              style={styles.tabHeader(activeTab === "specifications")}
+              onClick={() => setActiveTab("specifications")}
+            >
+              Specifications
+            </button>
+            <button
+              style={styles.tabHeader(activeTab === "seller")}
+              onClick={() => setActiveTab("seller")}
+            >
+              Seller Info
+            </button>
           </div>
           <div style={styles.tabContent}>
-            {activeTab === "specifications" && <div>Specifications content here...</div>}
-            {activeTab === "reviews" && <div>Reviews content here...</div>}
-            {activeTab === "questions" && <div>Q&A content here...</div>}
+            {activeTab === "specifications" && (
+              <div>
+                <p><strong>Category:</strong> {product.category}</p>
+                <p><strong>Condition:</strong> {product.condition}</p>
+                <p><strong>Listing Type:</strong> {product.listingType}</p>
+                <p><strong>Quantity Available:</strong> {product.quantity}</p>
+                <p><strong>Location:</strong> {product.location}</p>
+              </div>
+            )}
+            {activeTab === "seller" && product.seller && (
+              <div>
+                <p><strong>Name:</strong> {product.seller.fullName}</p>
+                <p><strong>Email:</strong> {product.seller.email}</p>
+                <p><strong>Ward:</strong> {product.seller.ward_no}</p>
+                {product.seller.phone && (
+                  <p><strong>Phone:</strong> {product.seller.phone}</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </main>

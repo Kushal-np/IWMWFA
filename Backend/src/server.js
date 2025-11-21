@@ -25,7 +25,7 @@ app.use("/business" , businessRoutes) ;
 app.use("/truck" , truckRoutes)
 app.use("/complaint" , complaintRoutes);
 app.use("/admin", adminRoutes)
-app.use("/products" , productRoutes);
+app.use("/products" , productRoutes); //products
 
 
 app.listen(PORT  , ()=>{

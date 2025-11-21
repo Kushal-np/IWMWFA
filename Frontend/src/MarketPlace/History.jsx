@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const statsData = [
   { icon: "📦", label: "Total Purchased", value: 24, subtext: "Rs. 15,850 spent" },
@@ -58,8 +59,18 @@ const historyData = [
   },
 ];
 
+const navItems = [
+  { key: "Home", path: "/marketPlace" },
+  { key: "Sell", path: "/marketPlace/sellProduct" },
+  { key: "Cart", path: "/marketPlace/shoppingCart" },
+  { key: "Order", path: "/marketPlace/orderDetails" },
+  { key: "History", path: "/marketPlace/history" },
+  { key: "Dashboard", path: "/dashboard" },
+];
+
 const HistoryPage = () => {
   const [activeTab, setActiveTab] = useState("All");
+  const location = useLocation();
 
   const filteredHistory =
     activeTab === "All"
@@ -104,9 +115,6 @@ const HistoryPage = () => {
       height: "48px",
       transition: "transform 0.3s ease",
       cursor: "pointer",
-    },
-    logoHover: {
-      transform: "rotate(360deg) scale(1.1)",
     },
     headerTitle: {
       fontSize: "1.5rem",
@@ -290,7 +298,6 @@ const HistoryPage = () => {
 
   return (
     <div style={styles.body}>
-      {/* Header */}
       <header style={styles.header}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" style={styles.logo} alt="Logo" />
@@ -303,10 +310,12 @@ const HistoryPage = () => {
 
       {/* Navbar */}
       <nav style={styles.navbar}>
-        {["Home", "Sell", "Cart", "Order", "History", "Custom", "Dashboard"].map((navItem) => (
-          <div key={navItem} style={styles.navItem(navItem === "History")}>
-            {navItem}
-          </div>
+        {navItems.map((navItem) => (
+          <Link key={navItem.key} to={navItem.path} style={{ textDecoration: "none" }}>
+            <div style={styles.navItem(location.pathname === navItem.path)}>
+              {navItem.key}
+            </div>
+          </Link>
         ))}
       </nav>
 

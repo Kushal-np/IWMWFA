@@ -18,6 +18,9 @@ import Homepage from "./MarketPlace/Homepage";
 import ShoppingCart from "./MarketPlace/ShoppingCart";
 import HistoryPage from "./MarketPlace/History";
 import ProductDetailsPage from "./MarketPlace/ProductsDetailPage";
+import OrderPage from "./MarketPlace/OrderPage";
+import { SellPage } from "./MarketPlace/SellPage";
+import OrderDetailPage from "./MarketPlace/OrderDetailPage";
 function App() {
   return (
     <Routes>
@@ -60,8 +63,11 @@ function App() {
         <Route path ="" element={<Homepage/>} />
         <Route path ="shoppingCart" element={<ShoppingCart/>} />
         <Route path ="history" element={<HistoryPage/>} />
-        <Route path = "productDetails" element={<ProductDetailsPage/>}/>
-      </Route>
+        <Route path = "productDetails/:id" element={<ProductDetailsPage/>}/>
+        <Route path = "orderDetails" element={<OrderPage/>}/>
+        <Route path = "orderDetails/:id" element={<OrderDetailPage/>}/>
+        <Route path = "sellProduct" element={<SellPage/>} />
+       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
 
