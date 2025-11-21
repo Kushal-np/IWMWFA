@@ -178,3 +178,41 @@ export const getCurrentUser = async (req, res) => {
     }
 };
 
+
+
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { address, ward_no } = req.body;
+    const userId = req.user.id
+    const user = await User.findById(userId);
+    console.log(user)
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Update only address and ward_no
+    if (address !== undefined) user.address = address;
+    if (ward_no !== undefined) user.ward_no = ward_no;
+
+    await user.save();
+
+    // Return user without password
+    const updatedUser = await User.findById(user._id).select('-password');
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error while updating profile",
+      error: error.message
+    });
+  }
+};
