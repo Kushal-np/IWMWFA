@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complaint – WasteCare</title>
+  <link rel="stylesheet" href="complain.css">
+</head>
+<body>
+<div class="page">
+  <div class="container"> <!-- Added flex container -->
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h2 class="logo">WasteCare</h2>
+      <br>
+      <br>
+      <ul class="menu">
+        <li class="active">Dashboard</li>
+        <li>Pickup Requests</li>
+        <li>Payment</li>
+        <li>Complaints</li>
+        <li>Schedule</li>
+        <li>Profile</li>
+        <li class="logout">Logout</li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <h1>Submit a Complaint</h1>
+      <p class="subtitle">Report waste issues in your area. Our team will respond quickly.</p>
+
+      <!-- FORM -->
+      <form class="complaint-form">
+        <div class="form-group">
+          <label for="title">Complaint Title</label>
+          <input type="text" id="title" placeholder="e.g., Garbage not picked up" required>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" required>
+            <option value="">Select category</option>
+            <option>Missed Pickup</option>
+            <option>Overflowing Waste</option>
+            <option>Illegal Dumping</option>
+            <option>Damaged Bin</option>
+            <option>Other Issue</option>
+          </select>
+        </div>
+
+        <div class="form-group location-group">
+          <label>Location</label>
+          <input type="text" id="manualLocation" placeholder="Enter address / street / landmark">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" rows="4" placeholder="Describe the issue..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Upload Image</label>
+          <input type="file" id="image" accept="image/*">
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Complaint</button>
+      </form>
+
+      <!-- HISTORY TABLE -->
+      <div class="history-section">
+        <h2>Your Complaints</h2>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+            <tr>
+              <td>Garbage not picked up</td>
+              <td><span class="status pending">Pending</span></td>
+              <td>2025-11-18</td>
+            </tr>
+            <tr>
+              <td>Overflowing bin</td>
+              <td><span class="status resolved">Resolved</span></td>
+              <td>2025-11-12</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

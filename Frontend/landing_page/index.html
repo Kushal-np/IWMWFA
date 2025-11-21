@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recycling — Ghibli Style</title>
+  <title>WasteCare - Recycling Management</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,7 +13,14 @@
     <div class="logo">
        WasteCare
     </div>
-    <ul class="nav-links">
+    
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <ul class="nav-links" id="navLinks">
       <li><a href="#">Home</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Schedule</a></li>
@@ -24,30 +31,24 @@
 
   <main class="hero" role="main" aria-label="Recycling illustration hero">
 
-  <!-- Main Hero Title -->
-  <div class="hero-text">
-    <h1>WasteCare</h1>
-    <p>“Clean streets, green minds, better tomorrow.”</p>
-  </div>
+    <!-- Main Hero Title -->
+    <div class="hero-text">
+      <h1>WasteCare</h1>
+      <p>"Clean streets, green minds, better tomorrow."</p>
+    </div>
 
-<!-- Hero Text Box below title -->
-  <div class="box">
-    <p>
-      Every piece of waste tells a story. Our platform ensures that no trash is left behind. From scheduling pickups to online bill payments, residents and businesses are empowered to maintain a cleaner, healthier city. Together, we can turn inefficient waste management into a sustainable, seamless experience.
-    </p>
-    
+    <!-- Hero Text Box below title -->
+    <div class="box">
+      <p>
+        Every piece of waste tells a story. Our platform ensures that no trash is left behind. From scheduling pickups to online bill payments, residents and businesses are empowered to maintain a cleaner, healthier city. Together, we can turn inefficient waste management into a sustainable, seamless experience.
+      </p>
+    </div>
 
-  </div>
+    <!-- Mobile Image -->
+    <img class="mobile-image" src="landing.png" alt="Recycling illustration">
+  </main>
 
-  <!-- Empty left area -->
-  <div class="left-col" aria-hidden="true"></div>
-
-  <!-- Mobile Image -->
-  <img class="mobile-image" src="landing.png" alt="Recycling illustration">
-</main>
-
-
-  <script src="style.css"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
