@@ -1,0 +1,44 @@
+<!-- HTML FILE: profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>User Profile</title>
+<link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+<div class="profile-container">
+<div class="profile-header">
+<img src="profile.png" alt="Profile Photo" class="profile-img" />
+<h2 class="profile-name">{{user.name}}</h2>
+<p class="profile-type">Residential User</p>
+</div>
+
+
+<div class="profile-details">
+<h3>Personal Information</h3>
+<div class="detail-box">
+<p><strong>Name:</strong> {{user.name}}</p>
+<p><strong>Email:</strong> {{user.email}}</p>
+<p><strong>Phone:</strong> 9800000000</p>
+</div>
+
+
+<h3>Address</h3>
+<div class="detail-box">
+<p><strong>Province:</strong> No data</p>
+<p><strong>District:</strong> No data</p>
+<p><strong>Municipality:</strong> No data</p>
+</div>
+
+
+<h3>Waste Service Info</h3>
+<div class="detail-box">
+<p><strong>Last Request:</strong>No data</p>
+</div>
+
+
+<h3>KYC Verification</h3>
+<div class="detail-box">
+<p><strong>Status:</strong> <span class="pending">Pending</span></p>
