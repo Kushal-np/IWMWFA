@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell - Recycle Reuse Reduce</title>
+    <style>
+        :root {
+            --green: #2e7d32;
+            --light-green: #66bb6a;
+            --green-hover: #1b5e20;
+            --accent: #43a047;
+            --border: #e0e0e0;
+            --white: #ffffff;
+            --bg: #f5f7fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --radius: 16px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 30px rgba(46, 125, 50, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            width: 100%;
+            background: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--green), var(--light-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .header-right input {
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            width: 320px;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--bg);
+        }
+
+        .header-right input:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+            background: white;
+        }
+
+        .header-right {
+            position: relative;
+        }
+
+        .header-right::before {
+            content: "🔍";
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .navbar li {
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .navbar li:hover {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.1), rgba(102, 187, 106, 0.1));
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+
+        .navbar .active {
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .main {
+            padding: 3rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--green), var(--light-green));
+            border-radius: 2px;
+        }
+
+        .sell-form-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--bg);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .image-upload {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg);
+        }
+
+        .image-upload:hover {
+            border-color: var(--green);
+            background: rgba(46, 125, 50, 0.05);
+        }
+
+        .image-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-upload p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .image-upload span {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .image-upload.dragover {
+            border-color: var(--green);
+            background: rgba(46, 125, 50, 0.1);
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #e53935;
+            background: #fff5f5;
+        }
+
+        .form-group.error input:focus,
+        .form-group.error select:focus,
+        .form-group.error textarea:focus {
+            box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.1);
+        }
+
+        .error-message {
+            color: #e53935;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .image-upload.error {
+            border-color: #e53935;
+            background: #fff5f5;
+        }
+
+        .image-error {
+            color: #e53935;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .image-error.show {
+            display: block;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .image-preview .remove-btn:hover {
+            background: #e53935;
+            transform: scale(1.1);
+        }
+
+        .category-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .category-chip {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .category-chip:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .category-chip.selected {
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            color: white;
+            border-color: var(--green);
+        }
+
+        .listing-type-toggle {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .listing-type-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .listing-type-btn:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .listing-type-btn.active {
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            color: white;
+            border-color: var(--green);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .donation-note {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.1), rgba(102, 187, 106, 0.1));
+            border: 1px solid var(--light-green);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--green);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .donation-note.show {
+            display: block;
+        }
+
+        .price-input-wrapper {
+            position: relative;
+        }
+
+        .price-input-wrapper::before {
+            content: "Rs.";
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .price-input-wrapper input {
+            padding-left: 3rem !important;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, var(--green-hover), var(--green));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 400px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content h3 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content .btn-submit {
+            margin-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .header-right input {
+                width: 100%;
+            }
+
+            .navbar ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" class="logo" alt="Logo">
+            <h1>Recycle Reuse Reduce</h1>
+        </div>
+        <div class="header-right">
+            <input type="search" placeholder="Search products..." />
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul>
+            <li>Home</li>
+            <li class="active">Sell</li>
+            <li>Cart</li>
+            <li>Order</li>
+            <li>History</li>
+            <li>Custom</li>
+            <li>Dashboard</li>
+        </ul>
+    </nav>
+
+    <main class="main">
+        <h2 class="section-title">List Your Item</h2>
+
+        <div class="sell-form-card">
+
+            <div class="form-section">
+                <h3 class="form-section-title">📷 Product Images</h3>
+                <div class="image-upload" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                    <div class="image-upload-icon">📤</div>
+                    <p><span>Click to upload</span> or drag and drop</p>
+                    <p>PNG, JPG up to 5MB (Max 4 images)</p>
+                </div>
+                <div class="image-preview-container" id="previewContainer"></div>
+                <p class="image-error" id="imageError">Please upload at least one image</p>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">📦 Basic Information</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width" id="titleGroup">
+                        <label>Product Title *</label>
+                        <input type="text" id="productTitle" placeholder="e.g., Recycled Plastic Bottles">
+                        <span class="error-message">Please enter a product title</span>
+                    </div>
+                    <div class="form-group full-width" id="descGroup">
+                        <label>Description *</label>
+                        <textarea id="productDesc"
+                            placeholder="Describe your item, its condition, and any relevant details..."></textarea>
+                        <span class="error-message">Please enter a description</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">🏷️ Category</h3>
+                <div class="category-chips">
+                    <div class="category-chip selected">♻️ Plastics</div>
+                    <div class="category-chip">🔩 Metal</div>
+                    <div class="category-chip">🫙 Glass</div>
+                    <div class="category-chip">📦 Cardboard</div>
+                    <div class="category-chip">📄 Paper</div>
+                    <div class="category-chip">🧵 Textile</div>
+                    <div class="category-chip">💻 E-Waste</div>
+                    <div class="category-chip">🪵 Wood</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">💰 Listing Type</h3>
+                <div class="listing-type-toggle">
+                    <button class="listing-type-btn active" id="sellBtn" data-type="sell">🏷️ Sell</button>
+                    <button class="listing-type-btn" id="donateBtn" data-type="donate">🎁 Donate</button>
+                </div>
+            </div>
+
+            <div class="form-section" id="pricingSection">
+                <h3 class="form-section-title">💰 Pricing & Quantity</h3>
+                <div class="donation-note" id="donationNote">🌱 Thank you for donating! Your item will be listed as free
+                    for someone in need.</div>
+                <div class="form-grid">
+                    <div class="form-group" id="priceGroup">
+                        <label>Price *</label>
+                        <div class="price-input-wrapper">
+                            <input type="number" id="productPrice" placeholder="0">
+                        </div>
+                        <span class="error-message">Please enter a price</span>
+                    </div>
+                    <div class="form-group" id="qtyGroup">
+                        <label>Quantity / Weight *</label>
+                        <input type="text" id="productQty" placeholder="e.g., 50 pieces or 10 kg">
+                        <span class="error-message">Please enter quantity or weight</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Condition</label>
+                        <select>
+                            <option>Select condition</option>
+                            <option>New / Unused</option>
+                            <option>Like New</option>
+                            <option>Good</option>
+                            <option>Fair</option>
+                            <option>For Recycling Only</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Negotiable?</label>
+                        <select>
+                            <option>Yes, price is negotiable</option>
+                            <option>No, fixed price</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">📍 Pickup / Delivery</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width" id="locationGroup">
+                        <label>Pickup Location *</label>
+                        <input type="text" id="productLocation" placeholder="Enter your city or area">
+                        <span class="error-message">Please enter a pickup location</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Option</label>
+                        <select>
+                            <option>Pickup Only</option>
+                            <option>Delivery Available</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="contactGroup">
+                        <label>Contact Number *</label>
+                        <input type="tel" id="productContact" placeholder="Your phone number">
+                        <span class="error-message">Please enter a contact number</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-submit" id="submitBtn">🌿 List My Item</button>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal-overlay" id="successModal">
+            <div class="modal-content">
+                <div class="modal-icon">✅</div>
+                <h3>Item Listed Successfully!</h3>
+                <p>Your eco-friendly product is now live on the marketplace.</p>
+                <button class="btn-submit" onclick="closeModal()">Continue</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Listing type toggle (Sell / Donate)
+        const sellBtn = document.getElementById('sellBtn');
+        const donateBtn = document.getElementById('donateBtn');
+        const priceGroup = document.getElementById('priceGroup');
+        const negotiableGroup = document.querySelector('.form-group:has(select[id="negotiableSelect"])') || document.querySelectorAll('.form-grid')[2].children[3];
+        const donationNote = document.getElementById('donationNote');
+        const priceInput = document.getElementById('productPrice');
+        let listingType = 'sell';
+
+        sellBtn.addEventListener('click', () => {
+            listingType = 'sell';
+            sellBtn.classList.add('active');
+            donateBtn.classList.remove('active');
+            priceGroup.style.display = 'flex';
+            donationNote.classList.remove('show');
+            priceInput.value = '';
+        });
+
+        donateBtn.addEventListener('click', () => {
+            listingType = 'donate';
+            donateBtn.classList.add('active');
+            sellBtn.classList.remove('active');
+            priceGroup.style.display = 'none';
+            donationNote.classList.add('show');
+            priceInput.value = '0';
+            priceGroup.classList.remove('error');
+        });
+
+        // Category chip selection
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+            });
+        });
+
+        // Image upload functionality
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        let uploadedFiles = [];
+        const MAX_IMAGES = 4;
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const remaining = MAX_IMAGES - uploadedFiles.length;
+            const filesToAdd = Array.from(files).slice(0, remaining);
+
+            filesToAdd.forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File too large. Max 5MB allowed.');
+                    return;
+                }
+
+                uploadedFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    createPreview(e.target.result, uploadedFiles.length - 1);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            updateDropZoneText();
+        }
+
+        function createPreview(src, index) {
+            const div = document.createElement('div');
+            div.className = 'image-preview';
+            div.innerHTML = `
+    <img src="${src}" alt="Preview">
+    <button class="remove-btn" data-index="${index}">×</button>
+  `;
+            div.querySelector('.remove-btn').addEventListener('click', () => removeImage(index));
+            previewContainer.appendChild(div);
+        }
+
+        function removeImage(index) {
+            uploadedFiles.splice(index, 1);
+            previewContainer.innerHTML = '';
+            uploadedFiles.forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = (e) => createPreview(e.target.result, i);
+                reader.readAsDataURL(file);
+            });
+            updateDropZoneText();
+        }
+
+        function updateDropZoneText() {
+            const remaining = MAX_IMAGES - uploadedFiles.length;
+            if (remaining === 0) {
+                dropZone.style.display = 'none';
+            } else {
+                dropZone.style.display = 'block';
+            }
+            // Clear image error when images are added
+            if (uploadedFiles.length > 0) {
+                dropZone.classList.remove('error');
+                document.getElementById('imageError').classList.remove('show');
+            }
+        }
+
+        // Form validation
+        const submitBtn = document.getElementById('submitBtn');
+
+        submitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+            dropZone.classList.remove('error');
+            document.getElementById('imageError').classList.remove('show');
+
+            // Validate images
+            if (uploadedFiles.length === 0) {
+                dropZone.classList.add('error');
+                document.getElementById('imageError').classList.add('show');
+                isValid = false;
+            }
+
+            // Validate title
+            const title = document.getElementById('productTitle');
+            if (!title.value.trim()) {
+                document.getElementById('titleGroup').classList.add('error');
+                isValid = false;
+            }
+
+            // Validate description
+            const desc = document.getElementById('productDesc');
+            if (!desc.value.trim()) {
+                document.getElementById('descGroup').classList.add('error');
+                isValid = false;
+            }
+
+            // Validate price (only if selling)
+            const price = document.getElementById('productPrice');
+            if (listingType === 'sell' && (!price.value || price.value <= 0)) {
+                document.getElementById('priceGroup').classList.add('error');
+                isValid = false;
+            }
+
+            // Validate quantity
+            const qty = document.getElementById('productQty');
+            if (!qty.value.trim()) {
+                document.getElementById('qtyGroup').classList.add('error');
+                isValid = false;
+            }
+
+            // Validate location
+            const location = document.getElementById('productLocation');
+            if (!location.value.trim()) {
+                document.getElementById('locationGroup').classList.add('error');
+                isValid = false;
+            }
+
+            // Validate contact number
+            const contact = document.getElementById('productContact');
+            if (!contact.value.trim()) {
+                document.getElementById('contactGroup').classList.add('error');
+                isValid = false;
+            }
+
+            if (isValid) {
+                document.getElementById('successModal').classList.add('show');
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+
+        // Clear error on input
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('input', () => {
+                el.closest('.form-group')?.classList.remove('error');
+            });
+        });
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            // Reset form
+            document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+            uploadedFiles = [];
+            previewContainer.innerHTML = '';
+            dropZone.style.display = 'block';
+            // Reset to sell mode
+            listingType = 'sell';
+            sellBtn.classList.add('active');
+            donateBtn.classList.remove('active');
+            priceGroup.style.display = 'flex';
+            donationNote.classList.remove('show');
+        }
+    </script>
+
+</body>
+
+</html>
