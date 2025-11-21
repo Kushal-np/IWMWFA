@@ -1,87 +1,120 @@
-async function loadDashboard() {
-  try {
-    const res = await fetch("/api/admin/dashboard-data");
-    const json = await res.json();
-    const data = json.data;
+// --------------------- DUMMY DATA ---------------------
+const data = {
+    statistics: {
+        users: { total: 8, regular: 4, businesses: 2, admins: 2 },
+        complaints: { total: 14, pending: 14, verified: 0, resolved: 0 },
+        operations: { totalTrucks: 1, totalRoutes: 1, wardsCovered: 1, totalPickupRequests: 9, pendingPickupRequests: 0 }
+    },
+    charts: {
+        complaintsByStatus: [
+            { status: "Pending", count: 14, color: "#FFA500" },
+            { status: "Verified", count: 0, color: "#4169E1" },
+            { status: "Resolved", count: 0, color: "#32CD32" }
+        ],
+        usersByRole: [
+            { role: "Users", count: 4, color: "#4169E1" },
+            { role: "Businesses", count: 2, color: "#FF6347" },
+            { role: "Admins", count: 2, color: "#32CD32" }
+        ],
+        wardWiseUsers: [
+            { ward: "Ward 5", count: 1 },
+            { ward: "Ward 9", count: 1 }
+        ],
+        wardCoverage: [
+            { ward: 5, hasRoute: true, pickupDays: ["Mon","Wed","Fri"], pickupTime: "08:00" }
+        ]
+    }
+};
 
-    // UPDATE STATS
-    document.getElementById("totalUsers").innerText = data.statistics.users.total;
-    document.getElementById("totalComplaints").innerText = data.statistics.complaints.total;
-    document.getElementById("resolvedComplaints").innerText = data.statistics.complaints.resolved;
-    document.getElementById("pendingPickup").innerText = data.statistics.operations.pendingPickupRequests;
+// --------------------- UPDATE STAT CARDS ---------------------
+document.getElementById("totalUsers").textContent = data.statistics.users.total;
+document.getElementById("totalComplaints").textContent = data.statistics.complaints.total;
+document.getElementById("resolvedComplaints").textContent = data.statistics.complaints.resolved;
+document.getElementById("pendingPickup").textContent = data.statistics.operations.pendingPickupRequests;
 
-    // CHART 1: Complaints by Status
-    new Chart(document.getElementById("complaintsChart"), {
-      type: "pie",
-      data: {
+// --------------------- CHARTS ---------------------
+
+// Complaints by Status - Doughnut Chart
+const complaintsCtx = document.getElementById("complaintsChart").getContext("2d");
+new Chart(complaintsCtx, {
+    type: 'doughnut',
+    data: {
         labels: data.charts.complaintsByStatus.map(c => c.status),
         datasets: [{
-          data: data.charts.complaintsByStatus.map(c => c.count),
-          backgroundColor: data.charts.complaintsByStatus.map(c => c.color)
+            data: data.charts.complaintsByStatus.map(c => c.count),
+            backgroundColor: data.charts.complaintsByStatus.map(c => c.color)
         }]
-      }
-    });
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
 
-    // CHART 2: Users by Role
-    new Chart(document.getElementById("complainward"), {
-      type: "bar",
-      data: {
-        labels: data.charts.usersByRole.map(u => u.role),
-        datasets: [{
-          label: "Users",
-          data: data.charts.usersByRole.map(u => u.count),
-          backgroundColor: data.charts.usersByRole.map(u => u.color)
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-
-    // CHART 3: Ward-wise Users
-    new Chart(document.getElementById("complaincat"), {
-      type: "bar",
-      data: {
+// Complaints by Ward - Bar Chart
+const complainWardCtx = document.getElementById("complainward").getContext("2d");
+new Chart(complainWardCtx, {
+    type: 'bar',
+    data: {
         labels: data.charts.wardWiseUsers.map(w => w.ward),
         datasets: [{
-          label: "Users per Ward",
-          data: data.charts.wardWiseUsers.map(w => w.count),
-          backgroundColor: "#4ade80"
+            label: "Complaints",
+            data: data.charts.wardWiseUsers.map(w => w.count),
+            backgroundColor: ["#FFA500", "#FF6347"]
         }]
-      }
-    });
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+    }
+});
 
-    // CHART 4: Ward Coverage
-    new Chart(document.getElementById("wastecollected"), {
-      type: "doughnut",
-      data: {
-        labels: data.charts.wardCoverage.map(w => "Ward " + w.ward),
+// Complaints by Category - Bar Chart (Dummy Data)
+const complainCatCtx = document.getElementById("complaincat").getContext("2d");
+new Chart(complainCatCtx, {
+    type: 'bar',
+    data: {
+        labels: ["Plastic", "Organic", "Electronic", "Glass"],
         datasets: [{
-          data: data.charts.wardCoverage.map(w => w.hasRoute ? 1 : 0),
-          backgroundColor: ["#16a34a", "#dc2626", "#2563eb", "#f59e0b", "#9333ea"]
+            label: "Complaints",
+            data: [5, 4, 3, 2],
+            backgroundColor: ["#FFA500","#32CD32","#4169E1","#FF6347"]
         }]
-      }
-    });
+    },
+    options: { responsive: true }
+});
 
-    // CHART 5: Pickup Requests
-    new Chart(document.getElementById("UserChart"), {
-      type: "bar",
-      data: {
-        labels: ["Total Requests", "Pending"],
+// Waste Collected - Line Chart (Dummy Data)
+const wasteCollectedCtx = document.getElementById("wastecollected").getContext("2d");
+new Chart(wasteCollectedCtx, {
+    type: 'line',
+    data: {
+        labels: ["Mon","Tue","Wed","Thu","Fri"],
         datasets: [{
-          label: "Requests",
-          data: [
-            data.statistics.operations.totalPickupRequests,
-            data.statistics.operations.pendingPickupRequests
-          ],
-          backgroundColor: ["#0ea5e9", "#facc15"]
+            label: "Trucks of Waste Collected",
+            data: [1,1,2,1,1],
+            borderColor: "#32CD32",
+            backgroundColor: "rgba(50,205,50,0.2)",
+            fill: true,
+            tension: 0.3
         }]
-      }
-    });
+    },
+    options: { responsive: true }
+});
 
-  } catch (error) {
-    console.log("Dashboard load error:", error);
-  }
-}
-
-loadDashboard();
+// Users by Ward - Pie Chart
+const userChartCtx = document.getElementById("UserChart").getContext("2d");
+new Chart(userChartCtx, {
+    type: 'pie',
+    data: {
+        labels: data.charts.wardWiseUsers.map(w => w.ward),
+        datasets: [{
+            data: data.charts.wardWiseUsers.map(w => w.count),
+            backgroundColor: ["#4169E1","#FF6347"]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
