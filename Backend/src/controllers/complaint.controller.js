@@ -98,7 +98,6 @@ export const getMyComplaints = async (req, res) => {
   }
 };
 
-// GET /api/complaints/all - Get all complaints (admin only)
 export const getAllComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find()

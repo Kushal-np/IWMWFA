@@ -6,6 +6,13 @@ const complaintSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    title:{
+        type:String , 
+        required:true
+    },
+    location:{
+        type:String ,
+    },
     description: { type: String, required: true },
     image: {
       type: String,
@@ -15,9 +22,11 @@ const complaintSchema = new mongoose.Schema(
       enum: ["pending", "verified", "resolved"],
       default: "pending",
     },
-    location: {
-      type: String,
-    },
+    category:{
+              type: String,
+      enum: ["Missed Pickup" , "Overflow-Waste" , "Illegal-Dumping" , "Damaged-Bin" , "Other-Issue"],
+      default: "Illegal-Dumping",
+    }
   },
   { timestamps: true }
 );

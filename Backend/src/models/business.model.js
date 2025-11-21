@@ -16,8 +16,8 @@ const pickUpRequest = new mongoose.Schema(
 
     wasteType: {
       type: String,
-      enum: ["Bio-waste", "Plastic-waste", "Electronic-waste", "Metal-waste"],
-      default: "Bio-waste",
+      enum: ["Organic-Waste" , "Recycleable-Waste" , "General-waste"],
+      default: "General-waste",
     },
 
     estimatedQuantity: {
