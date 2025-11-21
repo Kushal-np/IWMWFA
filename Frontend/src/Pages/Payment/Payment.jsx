@@ -19,6 +19,7 @@ export default function Payment() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' }, // Keep Profile
+        {name:'MarketPlace' , route:"/marketplace"} 
   ];
 
   const handleNavigation = (route, itemName) => {

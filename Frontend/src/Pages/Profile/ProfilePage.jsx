@@ -56,6 +56,7 @@ export default function ProfilePage() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' },
+        {name:'MarketPlace' , route:"/marketplace"} 
   ];
 
   const handleNavigation = (route, itemName) => {

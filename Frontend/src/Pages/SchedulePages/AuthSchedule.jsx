@@ -18,6 +18,7 @@ export default function AuthSchedule() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/schedule' },
     { name: 'Profile', route: '/profile' }, // Keep Profile
+    {name:'MarketPlace' , route:"/marketplace"} 
   ];
 
   const handleNavigation = (route, itemName) => {

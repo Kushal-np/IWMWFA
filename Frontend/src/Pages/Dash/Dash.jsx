@@ -11,7 +11,7 @@ export default function Dash() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/schedule' },
     { name: 'Profile', route: '/profile' },
-    { name: 'Logout', route: '/logout' }
+        {name:'Donate' , route:"/marketplace"} 
   ];
 
   const handleNavigation = (route, itemName) => {
@@ -77,115 +77,85 @@ export default function Dash() {
       )}
 
       {/* Sidebar */}
-      <aside style={{
-        position: window.innerWidth < 780 ? 'fixed' : 'static',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        width: '250px',
-        background: 'linear-gradient(180deg, #2f6b2f 0%, #25592b 100%)',
-        color: 'white',
-        padding: '30px 20px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '30px',
-        boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)',
-        zIndex: 40,
-        transform: window.innerWidth < 780 
-          ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
-          : 'translateX(0)',
-        transition: 'transform 0.3s ease-in-out'
-      }}>
-        <h2 style={{
-          fontSize: '1.8rem',
-          fontWeight: 700,
-          letterSpacing: '-0.5px'
-        }}>WasteCare</h2>
-        <ul style={{
-          listStyle: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-          padding: 0,
-          margin: 0,
-          flex: 1
-        }}>
-          {menuItems.slice(0, -1).map((item, index) => (
-            <li key={index}>
-              <a 
-                href={item.route} 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation(item.route, item.name);
-                }}
-                style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                  display: 'block',
-                  padding: '10px 15px',
-                  borderRadius: '8px',
-                  fontSize: '1.1rem',
-                  opacity: activeMenu === item.name ? 1 : 0.85,
-                  transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)',
-                  background: activeMenu === item.name ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  if (activeMenu !== item.name) {
-                    e.target.style.opacity = 1;
-                    e.target.style.transform = 'translateX(5px)';
-                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeMenu !== item.name) {
-                    e.target.style.opacity = 0.85;
-                    e.target.style.transform = 'translateX(0)';
-                    e.target.style.background = 'transparent';
-                  }
-                }}
-              >
-                {item.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-          <li>
-            <a 
-              href={menuItems[menuItems.length - 1].route}
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation(menuItems[menuItems.length - 1].route, menuItems[menuItems.length - 1].name);
-              }}
-              style={{
-                color: '#ffdddd',
-                textDecoration: 'none',
-                display: 'block',
-                padding: '10px 15px',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
-                opacity: 0.85,
-                transition: 'all 0.3s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.opacity = 1;
-                e.target.style.transform = 'translateX(5px)';
-                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.opacity = 0.85;
-                e.target.style.transform = 'translateX(0)';
-                e.target.style.background = 'transparent';
-              }}
-            >
-              {menuItems[menuItems.length - 1].name}
-            </a>
-          </li>
-        </ul>
-      </aside>
+{/* Sidebar */}
+<aside style={{
+  position: window.innerWidth < 780 ? 'fixed' : 'static',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  width: '250px',
+  background: 'linear-gradient(180deg, #2f6b2f 0%, #25592b 100%)',
+  color: 'white',
+  padding: '30px 20px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '30px',
+  boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)',
+  zIndex: 40,
+  transform: window.innerWidth < 780 
+    ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
+    : 'translateX(0)',
+  transition: 'transform 0.3s ease-in-out'
+}}>
+  <h2 style={{
+    fontSize: '1.8rem',
+    fontWeight: 700,
+    letterSpacing: '-0.5px'
+  }}>WasteCare</h2>
+
+  {/* NOW ALL MENU ITEMS INCLUDING DONATE ARE TOGETHER */}
+  <ul style={{
+    listStyle: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+    padding: 0,
+    margin: 0,
+    flex: 1
+  }}>
+    {menuItems.map((item, index) => (
+      <li key={index}>
+        <a 
+          href={item.route} 
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavigation(item.route, item.name);
+          }}
+          style={{
+            color: 'white',
+            textDecoration: 'none',
+            display: 'block',
+            padding: '10px 15px',
+            borderRadius: '8px',
+            fontSize: '1.1rem',
+            opacity: activeMenu === item.name ? 1 : 0.85,
+            transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)',
+            background: activeMenu === item.name ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => {
+            if (activeMenu !== item.name) {
+              e.target.style.opacity = 1;
+              e.target.style.transform = 'translateX(5px)';
+              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (activeMenu !== item.name) {
+              e.target.style.opacity = 0.85;
+              e.target.style.transform = 'translateX(0)';
+              e.target.style.background = 'transparent';
+            }
+          }}
+        >
+          {item.name}
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>
+
 
       {/* Main Content */}
       <main style={{
