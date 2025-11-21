@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteCare Payment Page</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8ffe3 0%, #d0f5d0 100%);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #2f6b2f 0%, #25592b 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .menu-item {
+            font-size: 1.1rem;
+            cursor: pointer;
+            opacity: 0.85;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            opacity: 1;
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logout {
+            margin-top: auto;
+            color: #ffdddd;
+        }
+
+        .main {
+            flex: 1;
+            padding: 40px 50px;
+            overflow-y: auto;
+        }
+
+        .main h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+            color: #1f5520;
+        }
+
+        .subtitle {
+            opacity: 0.6;
+            margin-bottom: 25px;
+            color: #2f6b2f;
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            color: #1f5520;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        table th,
+        table td {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #d7ffd2, #c5f5c0);
+            font-weight: 600;
+            color: #2f6b2f;
+        }
+
+        table tr:hover {
+            background: #f9fff8;
+        }
+
+        .pay-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #2f6b2f, #3a7d3a);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .pay-btn:hover {
+            background: linear-gradient(135deg, #3a7d3a, #2f6b2f);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 780px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                height: fit-content;
+                padding: 20px;
+            }
+
+            .menu {
+                flex-direction: row;
+            }
+
+            .menu-item {
+                white-space: nowrap;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            table th,
+            table td {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">WasteCare</h2>
+        <ul class="menu">
+            <li class="menu-item">Dashboard</li>
+            <li class="menu-item">Pickup Requests</li>
+            <li class="menu-item active">Payment</li> <!-- Payment highlighted -->
+            <li class="menu-item">Complaints</li>
+            <li class="menu-item">Schedule</li>
+            <li class="menu-item">Profile</li>
+            <li class="menu-item logout">Logout</li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <h1>Payments</h1>
+        <p class="subtitle">View your monthly bills and make payments.</p>
+
+        <div class="section">
+            <h2>Monthly Bills</h2>
+            <table id="billsTable">
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Month</th>
+                        <th>Amount (Rs.)</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS will populate rows -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        // Static payment data
+        const bills = [
+            { month: 'August 2025', amount: 300, paid: true },
+            { month: 'September 2025', amount: 300, paid: true },
+            { month: 'October 2025', amount: 300, paid: false },
+            { month: 'November 2025', amount: 300, paid: false }
+        ];
+
+        const tbody = document.querySelector('#billsTable tbody');
+
+        // Reverse the array so latest month comes first
+        bills.reverse().forEach((bill, index) => {
+            const tr = document.createElement('tr');
+
+            const tdSN = document.createElement('td');
+            tdSN.textContent = index + 1;
+            tr.appendChild(tdSN);
+
+            const tdMonth = document.createElement('td');
+            tdMonth.textContent = bill.month;
+            tr.appendChild(tdMonth);
+
+            const tdAmount = document.createElement('td');
+            tdAmount.textContent = bill.amount;
+            tr.appendChild(tdAmount);
+
+            const tdStatus = document.createElement('td');
+            tdStatus.textContent = bill.paid ? 'Paid' : 'Not Paid';
+            tr.appendChild(tdStatus);
+
+            const tdAction = document.createElement('td');
+            if (!bill.paid) {
+                const btn = document.createElement('button');
+                btn.textContent = 'Pay Now';
+                btn.className = 'pay-btn';
+                tdAction.appendChild(btn);
+            }
+            tr.appendChild(tdAction);
+
+            tbody.appendChild(tr);
+        });
+    </script>
+
+</body>
+
+</html>
