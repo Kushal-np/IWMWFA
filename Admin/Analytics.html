@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Analytics Dashboard</title>
+  <link rel="stylesheet" href="analytics.css">
+</head>
+<body>
+
+<div class="layout">
+  
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">WasteCare</h2>
+    <ul class="menu">
+      <li class="active">Dashboard</li>
+      <li>Complaints</li>
+      <li>Users</li>
+      <li>Trucks</li>
+      <li>Routes</li>
+      <li>Pickup Requests</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <h1>Analytics Dashboard</h1>
+    </header>
+
+    <!-- STAT CARDS -->
+    <section class="stats">
+      <div class="stat-card">
+        <h3>Total Users</h3>
+        <p id="totalUsers">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Total Complaints</h3>
+        <p id="totalComplaints">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Resolved Complaints</h3>
+        <p id="resolvedComplaints">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Pending Pickup</h3>
+        <p id="pendingPickup">0</p>
+      </div>
+    </section>
+
+    <!-- CHARTS SECTION -->
+    <section class="charts-large">
+
+      <div class="chart-card">
+        <h3>Complaints by Status</h3>
+        <canvas id="complaintsChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Complaints by Ward</h3>
+        <canvas id="complainward"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Complaints by Category</h3>
+        <canvas id="complaincat"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Total Truck Of Waste Collected</h3>
+        <canvas id="wastecollected"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>User By Ward</h3>
+        <canvas id="UserChart"></canvas>
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="analytics.js"></script>
+
+</body>
+</html>
