@@ -11,7 +11,7 @@ import { upload } from "../middlewares/upload.js";
 const router = express.Router();
 
 router.post("/create", isAuthenticated, upload.single("image"), createComplaint); 
-router.get("/my-complaints", isAuthenticated, getMyComplaints);
+router.get("/my-complaints", isAuthenticated, authorizeRoles("admin" , "business") ,  getMyComplaints);
 router.get("/all", isAuthenticated, authorizeRoles("admin"), getAllComplaints);
 
 export default router;

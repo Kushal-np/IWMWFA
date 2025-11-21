@@ -49,3 +49,26 @@ export const requestPickup = async (req, res) => {
     });
   }
 };
+
+
+
+// GET ALL PICKUP REQUESTS
+export const getAllPickupRequests = async (req, res) => {
+  try {
+    // fetch all pickup requests and populate owner info
+    const pickupRequests = await PickUpRequest.find()
+      .populate("owner", "fullName email");
+
+    res.status(200).json({
+      success: true,
+      count: pickupRequests.length,
+      pickupRequests, // array of all pickup requests
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching pickup requests",
+      error: error.message,
+    });
+  }
+};

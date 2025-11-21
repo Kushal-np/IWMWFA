@@ -1,3 +1,4 @@
+// complaintSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const complaintSlice = createSlice({
@@ -14,6 +15,7 @@ const complaintSlice = createSlice({
       state.allComplaints = action.payload;
     },
     addComplaint: (state, action) => {
+      // Add new complaint to the beginning of the array
       state.complaints.unshift(action.payload);
     },
   },

@@ -16,7 +16,10 @@ export const createComplaint = async (formData) => {
 
 export const getMyComplaints = async () => {
   const response = await api.get("/complaint/my-complaints");
+  console.log(response.data)
   return response.data;
+
+  
 };
 
 export const getAllComplaints = async () => {

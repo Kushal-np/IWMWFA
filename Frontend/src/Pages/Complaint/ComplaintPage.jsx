@@ -19,14 +19,16 @@ export default function ComplaintPage() {
   const { complaints, allComplaints } = useSelector((state) => state.complaint);
 
   // Fetch user's complaints
-  const { isLoading } = useQuery({
+  const { isLoading, error } = useQuery({
     queryKey: ["myComplaints"],
     queryFn: getMyComplaints,
     onSuccess: (data) => {
-      dispatch(setComplaints(data.complaints));
+      console.log("Fetched complaints:", data);
+      dispatch(setComplaints(data.complaints || []));
     },
     onError: (error) => {
       console.error("Failed to fetch complaints:", error);
+      alert(error.response?.data?.message || "Failed to load complaints");
     },
   });
 
@@ -36,7 +38,8 @@ export default function ComplaintPage() {
     queryFn: getAllComplaints,
     enabled: user?.role === "admin",
     onSuccess: (data) => {
-      dispatch(setAllComplaints(data.complaints));
+      console.log("Fetched all complaints:", data);
+      dispatch(setAllComplaints(data.complaints || []));
     },
     onError: (error) => {
       console.error("Failed to fetch all complaints:", error);
@@ -47,16 +50,23 @@ export default function ComplaintPage() {
   const createMutation = useMutation({
     mutationFn: createComplaint,
     onSuccess: (data) => {
+      console.log("Complaint created:", data);
+      // Add the new complaint to the store
       dispatch(addComplaint(data.complaint));
+      // Refetch to ensure we have the latest data
       queryClient.invalidateQueries(["myComplaints"]);
       if (user?.role === "admin") {
         queryClient.invalidateQueries(["allComplaints"]);
       }
       setFormData({ title: '', category: '', location: '', description: '' });
       setImageFile(null);
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = '';
       alert("Complaint submitted successfully!");
     },
     onError: (error) => {
+      console.error("Failed to create complaint:", error);
       alert(error.response?.data?.message || "Failed to submit complaint");
     },
   });
@@ -86,7 +96,7 @@ export default function ComplaintPage() {
 
   const handleSubmit = () => {
     if (!formData.title || !formData.category || !formData.description) {
-      alert('Please fill all required fields');
+      alert('Please fill all required fields (Title, Category, and Description)');
       return;
     }
 
@@ -221,7 +231,7 @@ export default function ComplaintPage() {
             <label style={{ marginBottom: '8px', fontWeight: 600, color: '#2f6b2f', fontSize: '0.95rem' }}>Category *</label>
             <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} style={inputStyle}>
               <option value="">Select category</option>
-              <option value="Missed Pickup">Missed Pickup</option>
+              <option value="Missed-Pickup">Missed Pickup</option>
               <option value="Overflow-Waste">Overflowing Waste</option>
               <option value="Illegal-Dumping">Illegal Dumping</option>
               <option value="Damaged-Bin">Damaged Bin</option>
@@ -240,7 +250,7 @@ export default function ComplaintPage() {
           </div>
 
           <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
-            <label style={{ marginBottom: '8px', fontWeight: 600, color: '#2f6b2f', fontSize: '0.95rem' }}>Upload Image</label>
+            <label style={{ marginBottom: '8px', fontWeight: 600, color: '#2f6b2f', fontSize: '0.95rem' }}>Upload Image (Optional)</label>
             <input type="file" accept="image/*" onChange={handleImageChange} style={inputStyle} />
             {imageFile && <span style={{ marginTop: '8px', fontSize: '0.85rem', color: '#666' }}>Selected: {imageFile.name}</span>}
           </div>
@@ -253,7 +263,13 @@ export default function ComplaintPage() {
         {/* User's Complaints */}
         <h2 style={{ marginBottom: '15px', color: '#1f5520', fontSize: '1.5rem' }}>Your Complaints</h2>
         {isLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#2f6b2f' }}>Loading complaints...</div>
+          <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}>
+            <p style={{ color: '#2f6b2f', fontSize: '1.1rem' }}>Loading complaints...</p>
+          </div>
+        ) : error ? (
+          <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}>
+            <p style={{ color: '#ef4444', fontSize: '1.1rem' }}>Failed to load complaints. Please refresh the page.</p>
+          </div>
         ) : (
           renderComplaintsTable(complaints)
         )}
@@ -263,7 +279,9 @@ export default function ComplaintPage() {
           <div style={{ marginTop: '40px' }}>
             <h2 style={{ marginBottom: '15px', color: '#1f5520', fontSize: '1.5rem' }}>All User Complaints (Admin)</h2>
             {isLoadingAll ? (
-              <div style={{ textAlign: 'center', padding: '40px', color: '#2f6b2f' }}>Loading all complaints...</div>
+              <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}>
+                <p style={{ color: '#2f6b2f', fontSize: '1.1rem' }}>Loading all complaints...</p>
+              </div>
             ) : (
               renderComplaintsTable(allComplaints, true)
             )}

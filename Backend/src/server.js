@@ -10,6 +10,7 @@ import authRoutes from "./routes/user.route.js"
 import businessRoutes from "./routes/business.route.js";
 import truckRoutes from "./routes/truck.route.js";
 import adminRoutes from "./routes/admin.route.js"
+import productRoutes from "./routes/product.route.js"
 import cors from "cors"
 app.use(
   cors({
@@ -24,6 +25,7 @@ app.use("/business" , businessRoutes) ;
 app.use("/truck" , truckRoutes)
 app.use("/complaint" , complaintRoutes);
 app.use("/admin", adminRoutes)
+app.use("/products" , productRoutes);
 
 
 app.listen(PORT  , ()=>{

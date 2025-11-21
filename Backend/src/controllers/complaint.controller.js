@@ -80,7 +80,7 @@ export const createComplaint = async (req, res) => {
 
 export const getMyComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find({ user: req.user.id })
+    const complaints = await Complaint.find({ user: req.user._id })
       .populate("user", "fullName email")
       .sort({ createdAt: -1 });
 
