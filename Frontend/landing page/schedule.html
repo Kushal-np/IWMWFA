@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schedule | WasteCare</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background-image: url(lahai.png);
+            color: #ffffff;
+        }
+
+        header {
+            background: #6fb973;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 28px;
+            font-family: Georgia, serif;
+        }
+
+        nav a {
+            margin-left: 28px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+            background-color: #3c8246;
+        }
+
+        nav a.active {
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-weight: 700;
+        }
+
+        .login-btn {
+            background: white;
+            color: #3c8246;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 10%;
+            background: linear-gradient(to bottom, #7ac37f, #6bb66e);
+        }
+
+        .hero h1 {
+            font-size: 60px;
+            font-family: Georgia, serif;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 22px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .schedule-section {
+            padding: 70px 12%;
+            background: #6bb66e;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.18);
+            padding: 35px;
+            border-radius: 18px;
+            margin: 35px 0;
+            line-height: 1.7;
+            font-size: 18px;
+        }
+
+        /* Search input */
+        #wardSearch {
+            width: 50%;
+            padding: 12px 18px;
+            font-size: 18px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+            text-align: left;
+            font-size: 18px;
+        }
+
+        th {
+            font-size: 20px;
+            font-family: Georgia, serif;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #5da463;
+            margin-top: 40px;
+            font-size: 15px;
+        }
+    </style>
+
+    <script>
+        function filterWard() {
+            let value = document.getElementById("wardSearch").value.toLowerCase().trim();
+            let rows = document.querySelectorAll("#scheduleTable tr");
+
+            rows.forEach((row, index) => {
+                if (index === 0) return; // skip header row
+                let ward = row.cells[0].innerText.toLowerCase().trim();
+
+                // Exact match filter
+                row.style.display = (ward === value || value === "") ? "" : "none";
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">WasteCare</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a class="active" href="schedule.html">Schedule</a>
+            <a href="resources.html">Resources</a>
+            <a href="#" class="login-btn">Login</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Pickup Schedule</h1>
+        <p>Search your ward number to check the waste pickup day and timing.</p>
+    </section>
+
+    <section class="schedule-section">
+
+        <div class="card">
+            <h2>Search Ward</h2>
+
+            <!-- Single input + datalist -->
+            <input list="wardList" id="wardSearch" placeholder="Type or select ward number (1–33)"
+                oninput="filterWard()">
+            <datalist id="wardList">
+                <script>
+                    for (let i = 1; i <= 33; i++) {
+                        document.write(`<option value="Ward ${i}">`);
+                    }
+                </script>
+            </datalist>
+        </div>
+
+        <div class="card">
+            <h2>Ward-wise Pickup Schedule</h2>
+
+            <table id="scheduleTable">
+                <tr>
+                    <th>Ward No.</th>
+                    <th>Type of Waste</th>
+                    <th>Pickup Day</th>
+                    <th>Time</th>
+                </tr>
+
+                <!-- Wards 1–33 -->
+                <script>
+                    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+                    const wasteTypes = ["Organic", "Recyclables", "General Waste"];
+
+                    for (let i = 1; i <= 33; i++) {
+                        let waste = wasteTypes[i % 3];
+                        let day = days[i % 6];
+                        let time = (i % 2 === 0) ? "8:00 AM – 11:00 AM" : "7:00 AM – 10:00 AM";
+
+                        document.write(`
+                        <tr>
+                            <td>Ward ${i}</td>
+                            <td>${waste}</td>
+                            <td>${day}</td>
+                            <td>${time}</td>
+                        </tr>
+                    `);
+                    }
+                </script>
+
+            </table>
+        </div>
+
+    </section>
+
+    <footer>
+        © 2025 WasteCare — Clean streets, green minds.
+    </footer>
+
+</body>
+
+</html>

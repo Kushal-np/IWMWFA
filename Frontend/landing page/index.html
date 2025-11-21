@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Waste Management System</title>
+
+    <style>
+        :root {
+            --light-green: #a6e28c;
+            --mid-green: #7cbc6c;
+            --dark-green: #2f4a26;
+            --card-green: #c9efb8;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif, sans-serif;
+            background: var(--light-green);
+            margin: 0;
+            background-image: url(lahai.png);
+            background-size: contain;
+            background-attachment: fixed;
+            padding: 0;
+            color: var(--dark-green);
+            color: white;
+        }
+
+        header {
+            background: var(--mid-green);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            color: white;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            letter-spacing: 1px;
+        }
+
+        .banner {
+            width: 100%;
+            display: block;
+            max-height: 360px;
+            object-fit: cover;
+            border-bottom: 4px solid var(--dark-green);
+        }
+
+        .container {
+            padding: 2rem 10%;
+        }
+
+        h2 {
+            margin-top: 2.5rem;
+            font-size: 2rem;
+            color: var(--dark-green);
+            color: white;
+        }
+
+        p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: var(--card-green);
+            background-color: #40af40;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card:hover {
+            background-color: #5fc13e;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 4rem;
+            background: var(--mid-green);
+            color: white;
+            text-align: center;
+            padding: 1.4rem;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            width: 300px;
+            padding: 20px;
+            background: #c9efb8;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Hidden paragraph */
+        .info-box p.hidden-text {
+            display: none;
+            margin-top: 15px;
+            color: #2f4a26;
+        }
+
+        /* Show on hover */
+        .info-box:hover p.hidden-text {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>About Our Waste Management Initiative</h1>
+    </header>
+
+
+    <div class="container">
+
+        <h2>Overview</h2>
+        <p id="thiss"> <!-- Fill your own text -->
+            Lorem ipsum placeholder text for government waste management system.
+            Add mission, purpose, or description here.
+        </p>
+
+
+
+        <h2>Objectives</h2>
+        <div class="card-grid">
+            <div class="card" id="a1">Objective 1</div>
+            <div class="card" id="a2">Objective 2</div>
+            <div class="card" id="a3">Objective 3</div>
+            <div class="card" id="a4">Objective 4</div>
+        </div>
+
+        <p id="hehe">las</p>
+        <h2>Focus Areas</h2>
+        <p> <!-- Insert your content -->
+            Placeholder text about recycling, waste segregation, public awareness, etc.
+        </p>
+
+        <h2>Government Responsibilities</h2>
+        <div class="card-grid">
+            <div class="card">Policy & Regulation</div>
+            <div class="card">Infrastructure Manag</div>
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $("#hehe").hide();
+                    $("#a1").on({
+                        mouseenter: function () {
+                            $("#hehe").stop(true, true).slideDown(600).html("-ayooooo!!!!!");
+
+                        },
+                        mouseleave: function () {
+                            $("#hehe").stop(true, true).slideUp(600).html("-ayooooo!!!!!");// return original text
+                        },
+                        click: function () {
+                            $("#hehe").toggle();
+                        }
+
+                    });
+                    $("#a2").on({
+                        mouseenter: function () {
+                            $("#hehe").stop(true, true).slideDown(600).html("-Second content");
+
+                        },
+                        mouseleave: function () {
+                            $("#hehe").stop(true, true).slideUp(600).html("-Second content");// return original text
+                        },
+                        click: function () {
+                            $("#hehe").toggle();
+                        }
+
+                    });
+                    $("#a3").on({
+                        mouseenter: function () {
+                            $("#hehe").stop(true, true).slideDown(600).html("-Third content");
+
+                        },
+                        mouseleave: function () {
+                            $("#hehe").stop(true, true).slideUp(600).html("-Third content");// return original text
+                        },
+                        click: function () {
+                            $("#hehe").toggle();
+                        }
+
+                    });
+                    $("#a4").on({
+                        mouseenter: function () {
+                            $("#hehe").stop(true, true).slideDown(600).html("-Fourth content");
+
+                        },
+                        mouseleave: function () {
+                            $("#hehe").stop(true, true).slideUp(600).html("-Fourth content");// return original text
+                        },
+                        click: function () {
+                            $("#hehe").toggle();
+                        }
+
+                    });
+                });
+
+            </script>
