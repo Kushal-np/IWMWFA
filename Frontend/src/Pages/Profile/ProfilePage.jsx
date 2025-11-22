@@ -9,7 +9,19 @@ export default function ProfilePage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ address: '', ward_no: '' });
-
+    React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+    };
+  }, []);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -145,7 +157,7 @@ export default function ProfilePage() {
         <div style={{ backgroundColor: '#f5f5dc', borderRadius: '20px', padding: '30px', width: '100%', maxWidth: '450px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
           {/* Profile Header */}
           <div style={{ textAlign: 'center', padding: '30px 20px', background: 'linear-gradient(135deg, #4CAF50, #2E7D32)', color: 'white', borderRadius: '10px' }}>
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Profile" style={{ width: '130px', height: '130px', objectFit: 'cover', borderRadius: '50%', border: '5px solid white', marginBottom: '10px' }} />
+            <img src="https://www.svgrepo.com/show/452030/avatar-default.svg" alt="Profile" style={{ width: '130px', height: '130px', objectFit: 'cover', borderRadius: '50%', border: '5px solid white', marginBottom: '10px' }} />
             <h2 style={{ margin: '5px 0 0', fontSize: '22px', fontWeight: 600 }}>{user?.fullName}</h2>
             <p style={{ opacity: 0.9, fontSize: '14px' }}>{user?.role === 'business' ? 'Business User' : user?.role === 'admin' ? 'Administrator' : 'Residential User'}</p>
           </div>

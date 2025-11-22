@@ -7,7 +7,19 @@ import { ArrowLeft } from 'lucide-react';
 const Schedule = () => {
   const navigate = useNavigate();
   const [searchWard, setSearchWard] = useState('');
-
+    React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+    };
+  }, []);
   // Generate schedule data for wards 1-33
   const generateScheduleData = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];

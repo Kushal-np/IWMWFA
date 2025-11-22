@@ -3,7 +3,19 @@ import React, { useState } from 'react';
 export default function Payment() {
   const [activeMenu, setActiveMenu] = useState('Payment');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+    };
+  }, []);
   const [bills] = useState([
     { month: 'August 2025', amount: 300, paid: true },
     { month: 'September 2025', amount: 300, paid: true },

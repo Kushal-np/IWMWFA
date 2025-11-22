@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { createPickupRequest } from "../../api/pickupApi";
 import { addPickup } from "../../store/pickupSlice";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function PickupPage() {
   const [activeMenu, setActiveMenu] = useState('Pickup Requests');
@@ -17,8 +17,32 @@ export default function PickupPage() {
     notes: ''
   });
 
+  React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    // Add spinner animation
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { pickups } = useSelector((state) => state.pickup);
 
   // Create pickup mutation
@@ -41,7 +65,7 @@ export default function PickupPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Menu items without Logout
+  // Menu items
   const menuItems = [
     { name: 'Dashboard', route: '/dash' },
     { name: 'Pickup Requests', route: '/requestPickup' },
@@ -49,13 +73,15 @@ export default function PickupPage() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' },
-        {name:'MarketPlace' , route:"/marketplace"} 
+    { name: 'MarketPlace', route: '/marketplace' } 
   ];
 
-  const handleNavigation = (route, itemName) => {
-    setActiveMenu(itemName);
-    setIsSidebarOpen(false);
-    navigate(route);
+  // Function to get display name for menu item
+  const getMenuItemDisplayName = (item) => {
+    if (item.name === 'Dashboard' && activeMenu === 'Dashboard') {
+      return 'Go Back';
+    }
+    return item.name;
   };
 
   const handleInputChange = (e) => {
@@ -204,11 +230,11 @@ export default function PickupPage() {
         }}>
           {menuItems.map((item, i) => (
             <li key={i}>
-              <a 
-                href={item.route} 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation(item.route, item.name);
+              <Link 
+                to={item.name === 'Pickup Requests' && activeMenu === 'Pickup Requests' ? -1 : item.route}
+                onClick={() => {
+                  setActiveMenu(item.name);
+                  setIsSidebarOpen(false);
                 }}
                 style={{
                   color: 'white',
@@ -218,13 +244,28 @@ export default function PickupPage() {
                   borderRadius: '8px',
                   fontSize: '1.1rem',
                   opacity: activeMenu === item.name ? 1 : 0.85,
+                  transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)',
                   background: activeMenu === item.name ? 'rgba(255,255,255,0.1)' : 'transparent',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer'
                 }}
+                onMouseEnter={(e) => {
+                  if (activeMenu !== item.name) {
+                    e.target.style.opacity = 1;
+                    e.target.style.transform = 'translateX(5px)';
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeMenu !== item.name) {
+                    e.target.style.opacity = 0.85;
+                    e.target.style.transform = 'translateX(0)';
+                    e.target.style.background = 'transparent';
+                  }
+                }}
               >
-                {item.name}
-              </a>
+                {getMenuItemDisplayName(item)}
+              </Link>
             </li>
           ))}
         </ul>
@@ -327,9 +368,23 @@ export default function PickupPage() {
               borderRadius: '8px', 
               cursor: createMutation.isLoading ? 'not-allowed' : 'pointer', 
               fontWeight: 600, 
-              fontSize: '1rem' 
+              fontSize: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
             }}
           >
+            {createMutation.isLoading && (
+              <div style={{
+                width: '20px',
+                height: '20px',
+                border: '3px solid rgba(255,255,255,0.3)',
+                borderTop: '3px solid white',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }} />
+            )}
             {createMutation.isLoading ? 'Submitting...' : 'Request Pickup'}
           </button>
         </div>

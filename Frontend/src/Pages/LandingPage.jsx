@@ -40,16 +40,15 @@ export default function WasteCare() {
     navigate('/');
   };
 
-  // Handle dashboard navigation based on user role
   const handleDashboardClick = (e) => {
     e.preventDefault();
     closeMenu();
     
     if (user) {
       if (user.role === 'admin') {
-        navigate('/admin/dashboard'); // Admin route
+        navigate('/admin/dashboard');
       } else {
-        navigate('/dashboard'); // User route
+        navigate('/dashboard');
       }
     }
   };
@@ -169,8 +168,8 @@ export default function WasteCare() {
           font-weight: 500;
           padding: 8px 16px;
           font-size: clamp(0.85rem, 1.2vw, 1rem);
-          border-radius: 6px;
-          transition: 0.3s ease;
+          border-radius: 8px;
+          transition: all 0.3s ease;
           display: block;
           cursor: pointer;
           border: none;
@@ -181,59 +180,90 @@ export default function WasteCare() {
         .nav-links li a:hover, .nav-links li button:hover {
           background: rgba(212, 255, 212, 0.25);
           color: #1e431e;
+          transform: translateY(-2px);
         }
 
         .login-btn {
-          background: white;
+          background: linear-gradient(135deg, #ffffff, #f0f0f0);
           color: #2f6b2f !important;
-          border-radius: 8px;
+          border-radius: 10px;
           font-weight: 600;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          border: 2px solid transparent;
         }
 
         .login-btn:hover {
-          background: #d4ffd4;
+          background: linear-gradient(135deg, #d4ffd4, #c2f0c2);
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
         }
 
         .logout-btn {
-          background: #ff4444;
+          background: linear-gradient(135deg, #ff4444, #dd2222);
           color: white !important;
-          border-radius: 8px;
+          border-radius: 10px;
           font-weight: 600;
+          box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
         }
 
         .logout-btn:hover {
-          background: #cc0000 !important;
-          color: white !important;
+          background: linear-gradient(135deg, #cc0000, #aa0000);
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(204, 0, 0, 0.4);
         }
 
         /* Dashboard button styles */
         .dashboard-btn {
-          border-radius: 8px;
+          border-radius: 10px;
           font-weight: 600;
-          padding: 8px 16px;
+          padding: 10px 20px;
           font-size: clamp(0.85rem, 1.2vw, 1rem);
           text-decoration: none;
-          display: block;
-          transition: 0.3s ease;
+          display: inline-block;
+          transition: all 0.3s ease;
           cursor: pointer;
           text-align: center;
           color: white;
+          border: none;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dashboard-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.2);
+          transition: left 0.5s ease;
+        }
+
+        .dashboard-btn:hover::before {
+          left: 100%;
         }
 
         .dashboard-btn.user {
-          background-color: #28a745; /* green for user */
+          background: linear-gradient(135deg, #28a745, #20873a);
+          box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         .dashboard-btn.user:hover {
-          background-color: #218838; /* darker green */
+          background: linear-gradient(135deg, #218838, #1a6d2e);
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(33, 136, 56, 0.4);
         }
 
         .dashboard-btn.admin {
-          background-color: #ff4444; /* red for admin */
+          background: linear-gradient(135deg, #dc3545, #bd2130);
+          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
         }
 
         .dashboard-btn.admin:hover {
-          background-color: #cc0000; /* darker red */
+          background: linear-gradient(135deg, #c82333, #a71d2a);
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(200, 35, 51, 0.4);
         }
 
         /* Hero Section */
@@ -287,6 +317,17 @@ export default function WasteCare() {
           line-height: 1.4;
         }
 
+        @media (min-width: 721px) {
+          .hero-text p {
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #d4ffd4;
+            width: 0;
+            animation: typing 4s steps(120, end) forwards, blink 0.75s step-end infinite;
+            animation-delay: 0.5s;
+          }
+        }
+
         .box {
           max-width: min(550px, 90%);
           padding: clamp(20px, 4vw, 32px);
@@ -318,7 +359,61 @@ export default function WasteCare() {
           border-radius: 12px;
         }
 
+        @media (max-width: 1024px) {
+          .hero {
+            background-position: 75% center;
+          }
+
+          .box {
+            max-width: min(500px, 85%);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .navbar {
+            padding: 12px 20px;
+          }
+
+          .hamburger {
+            display: flex;
+          }
+
+          .nav-links {
+            position: fixed;
+            top: 0;
+            right: ${isMenuOpen ? '0' : '-100%'};
+            height: 100vh;
+            width: 70%;
+            max-width: 300px;
+            background: rgba(47, 107, 47, 0.98);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            transition: right 0.4s ease;
+            padding: 40px;
+          }
+
+          .nav-links li a, .nav-links li button {
+            font-size: 1.1rem;
+            padding: 12px 20px;
+          }
+
+          .hero {
+            background-position: 70% center;
+          }
+        }
+
         @media (max-width: 720px) {
+          .hero {
+            background-image: linear-gradient(180deg, rgba(47, 107, 47, 0.3), rgba(47, 107, 47, 0.5)),
+                              url("https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800");
+            background-position: center;
+            padding-top: 90px;
+            align-items: center;
+            justify-content: flex-start;
+          }
+
           .hero-text {
             text-align: center;
             margin: 30px auto 20px;
@@ -339,6 +434,75 @@ export default function WasteCare() {
             margin: 20px auto 40px;
             text-align: center;
           }
+        }
+
+        @media (max-width: 450px) {
+          .hero {
+            padding-top: 80px;
+          }
+
+          .hero-text {
+            margin-top: 20px;
+          }
+
+          .hero-text h1 {
+            font-size: 2rem;
+          }
+
+          .hero-text p {
+            font-size: 0.95rem;
+          }
+
+          .box {
+            padding: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+          }
+
+          .nav-links {
+            width: 80%;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .logo {
+            font-size: 1.1rem;
+          }
+
+          .hero-text h1 {
+            font-size: 1.8rem;
+          }
+
+          .box {
+            padding: 16px;
+          }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+          .hero {
+            min-height: auto;
+            padding-top: 80px;
+            padding-bottom: 40px;
+          }
+
+          .hero-text {
+            margin-top: 20px;
+          }
+
+          .box {
+            margin-top: 20px;
+            margin-bottom: 30px;
+          }
+        }
+
+        @keyframes typing {
+          from { width: 0; }
+          to { width: 100%; }
+        }
+
+        @keyframes blink {
+          0%, 100% { border-color: transparent; }
+          50% { border-color: #d4ffd4; }
         }
 
         @keyframes fadeInBox {

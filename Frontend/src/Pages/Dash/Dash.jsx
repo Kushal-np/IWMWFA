@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Dash() {
   const [activeMenu, setActiveMenu] = useState('Dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+    };
+  }, []);
 
   const menuItems = [
     { name: 'Dashboard', route: '/dash' },
@@ -11,14 +26,14 @@ export default function Dash() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/schedule' },
     { name: 'Profile', route: '/profile' },
-        {name:'Donate' , route:"/marketplace"} 
+    { name: 'MarketPlace', route: '/marketplace' } 
   ];
 
-  const handleNavigation = (route, itemName) => {
-    setActiveMenu(itemName);
-    setIsSidebarOpen(false);
-    // For actual routing, you would use React Router
-    window.location.href = route;
+  const getMenuItemDisplayName = (item) => {
+    if (item.name === 'Dashboard' && activeMenu === 'Dashboard') {
+      return 'Go Back';
+    }
+    return item.name;
   };
 
   const scheduleData = [
@@ -77,85 +92,82 @@ export default function Dash() {
       )}
 
       {/* Sidebar */}
-{/* Sidebar */}
-<aside style={{
-  position: window.innerWidth < 780 ? 'fixed' : 'static',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  width: '250px',
-  background: 'linear-gradient(180deg, #2f6b2f 0%, #25592b 100%)',
-  color: 'white',
-  padding: '30px 20px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '30px',
-  boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)',
-  zIndex: 40,
-  transform: window.innerWidth < 780 
-    ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
-    : 'translateX(0)',
-  transition: 'transform 0.3s ease-in-out'
-}}>
-  <h2 style={{
-    fontSize: '1.8rem',
-    fontWeight: 700,
-    letterSpacing: '-0.5px'
-  }}>WasteCare</h2>
+      <aside style={{
+        position: window.innerWidth < 780 ? 'fixed' : 'static',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        width: '250px',
+        background: 'linear-gradient(180deg, #2f6b2f 0%, #25592b 100%)',
+        color: 'white',
+        padding: '30px 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '30px',
+        boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)',
+        zIndex: 40,
+        transform: window.innerWidth < 780 
+          ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
+          : 'translateX(0)',
+        transition: 'transform 0.3s ease-in-out'
+      }}>
+        <h2 style={{
+          fontSize: '1.8rem',
+          fontWeight: 700,
+          letterSpacing: '-0.5px'
+        }}>WasteCare</h2>
 
-  {/* NOW ALL MENU ITEMS INCLUDING DONATE ARE TOGETHER */}
-  <ul style={{
-    listStyle: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    padding: 0,
-    margin: 0,
-    flex: 1
-  }}>
-    {menuItems.map((item, index) => (
-      <li key={index}>
-        <a 
-          href={item.route} 
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation(item.route, item.name);
-          }}
-          style={{
-            color: 'white',
-            textDecoration: 'none',
-            display: 'block',
-            padding: '10px 15px',
-            borderRadius: '8px',
-            fontSize: '1.1rem',
-            opacity: activeMenu === item.name ? 1 : 0.85,
-            transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)',
-            background: activeMenu === item.name ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-            transition: 'all 0.3s ease',
-            cursor: 'pointer'
-          }}
-          onMouseEnter={(e) => {
-            if (activeMenu !== item.name) {
-              e.target.style.opacity = 1;
-              e.target.style.transform = 'translateX(5px)';
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (activeMenu !== item.name) {
-              e.target.style.opacity = 0.85;
-              e.target.style.transform = 'translateX(0)';
-              e.target.style.background = 'transparent';
-            }
-          }}
-        >
-          {item.name}
-        </a>
-      </li>
-    ))}
-  </ul>
-</aside>
-
+        <ul style={{
+          listStyle: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+          padding: 0,
+          margin: 0,
+          flex: 1
+        }}>
+          {menuItems.map((item, index) => (
+            <li key={index}>
+              <Link 
+                to={item.name === 'Dashboard' && activeMenu === 'Dashboard' ? -1 : item.route}
+                onClick={() => {
+                  setActiveMenu(item.name);
+                  setIsSidebarOpen(false);
+                }}
+                style={{
+                  color: 'white',
+                  textDecoration: 'none',
+                  display: 'block',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  fontSize: '1.1rem',
+                  opacity: activeMenu === item.name ? 1 : 0.85,
+                  transform: activeMenu === item.name ? 'translateX(5px)' : 'translateX(0)',
+                  background: activeMenu === item.name ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  if (activeMenu !== item.name) {
+                    e.target.style.opacity = 1;
+                    e.target.style.transform = 'translateX(5px)';
+                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeMenu !== item.name) {
+                    e.target.style.opacity = 0.85;
+                    e.target.style.transform = 'translateX(0)';
+                    e.target.style.background = 'transparent';
+                  }
+                }}
+              >
+                {getMenuItemDisplayName(item)}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </aside>
 
       {/* Main Content */}
       <main style={{
@@ -226,8 +238,8 @@ export default function Dash() {
             <p style={{ color: '#2f6b2f', fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '16px' }}>
               Thursday, 8 AM
             </p>
-            <button
-              onClick={() => handleNavigation('/schedule', 'Schedule')}
+            <Link
+              to="/schedule"
               style={{
                 width: '100%',
                 padding: '10px 20px',
@@ -238,7 +250,10 @@ export default function Dash() {
                 fontWeight: '500',
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(47, 107, 47, 0.2)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                textDecoration: 'none',
+                display: 'block',
+                textAlign: 'center'
               }}
               onMouseEnter={(e) => {
                 e.target.style.background = 'linear-gradient(135deg, #3a7d3a, #2f6b2f)';
@@ -252,7 +267,7 @@ export default function Dash() {
               }}
             >
               View Schedule
-            </button>
+            </Link>
           </div>
 
           {/* Card 2 - Pending Payment */}
@@ -295,8 +310,8 @@ export default function Dash() {
             <p style={{ color: '#2f6b2f', fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '16px' }}>
               Rs. 300
             </p>
-            <button
-              onClick={() => handleNavigation('/payment', 'Payment')}
+            <Link
+              to="/payment"
               style={{
                 width: '100%',
                 padding: '10px 20px',
@@ -307,7 +322,10 @@ export default function Dash() {
                 fontWeight: '500',
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(47, 107, 47, 0.2)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                textDecoration: 'none',
+                display: 'block',
+                textAlign: 'center'
               }}
               onMouseEnter={(e) => {
                 e.target.style.background = 'linear-gradient(135deg, #3a7d3a, #2f6b2f)';
@@ -321,7 +339,7 @@ export default function Dash() {
               }}
             >
               Pay Now
-            </button>
+            </Link>
           </div>
 
           {/* Card 3 - Complaints */}
@@ -364,8 +382,8 @@ export default function Dash() {
             <p style={{ color: '#2f6b2f', fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '16px' }}>
               1
             </p>
-            <button
-              onClick={() => handleNavigation('/complaints', 'Complaints')}
+            <Link
+              to="/complaints"
               style={{
                 width: '100%',
                 padding: '10px 20px',
@@ -376,7 +394,10 @@ export default function Dash() {
                 fontWeight: '500',
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(47, 107, 47, 0.2)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                textDecoration: 'none',
+                display: 'block',
+                textAlign: 'center'
               }}
               onMouseEnter={(e) => {
                 e.target.style.background = 'linear-gradient(135deg, #3a7d3a, #2f6b2f)';
@@ -390,7 +411,7 @@ export default function Dash() {
               }}
             >
               View Complaints
-            </button>
+            </Link>
           </div>
         </div>
 

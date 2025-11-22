@@ -4,6 +4,19 @@ export default function AuthSchedule() {
   const [activeMenu, setActiveMenu] = useState('Schedule');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+      React.useEffect(() => {
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      document.documentElement.style.margin = '0';
+      document.documentElement.style.padding = '0';
+      
+      return () => {
+        document.body.style.margin = '';
+        document.body.style.padding = '';
+        document.documentElement.style.margin = '';
+        document.documentElement.style.padding = '';
+      };
+    }, []);
   // Mock user data - in real app this would come from Redux
   const user = {
     fullName: 'User Name',

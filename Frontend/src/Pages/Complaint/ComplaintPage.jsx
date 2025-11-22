@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { createComplaint, getMyComplaints, getAllComplaints } from "../../api/complaint";
 import { addComplaint, setComplaints, setAllComplaints } from "../../store/complaintSlice";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ComplaintPage() {
   const [activeMenu, setActiveMenu] = useState('Complaints');
@@ -11,18 +11,37 @@ export default function ComplaintPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({ title: '', category: '', location: '', description: '' });
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    // Add spinner animation globally
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useSelector((state) => state.auth);
-  const { complaints, allComplaints } = useSelector((state) => state.complaint);
-
-  const { isLoading, error } = useQuery({
-    queryKey: ["myComplaints"],
-    queryFn: getMyComplaints,
-    onSuccess: (data) => dispatch(setComplaints(data.complaints || [])),
-  });
+  const { allComplaints } = useSelector((state) => state.complaint);
 
   const { isLoading: isLoadingAll } = useQuery({
     queryKey: ["allComplaints"],
@@ -39,6 +58,7 @@ export default function ComplaintPage() {
       if (user?.role === "admin") queryClient.invalidateQueries(["allComplaints"]);
       setFormData({ title: '', category: '', location: '', description: '' });
       setImageFile(null);
+      setImagePreview(null);
       const fileInput = document.querySelector('input[type="file"]');
       if (fileInput) fileInput.value = '';
       alert("Complaint submitted successfully!");
@@ -60,14 +80,15 @@ export default function ComplaintPage() {
     { name: 'Complaints', route: '/complaints' },
     { name: 'Schedule', route: '/authSchedule' },
     { name: 'Profile', route: '/profile' },
-        {name:'MarketPlace' , route:"/marketplace"} 
+    { name: 'MarketPlace', route: '/marketplace' } 
   ];
 
-  const handleNavigation = (route, itemName) => {
-    setActiveMenu(itemName);
-    setIsSidebarOpen(false);
-    navigate(route);
-  };
+  const getMenuItemDisplayName = (item) => {
+  if (item.name === 'Dashboard' && activeMenu === 'Pickup Requests') {
+    return 'Go Back';
+  }
+  return item.name;
+};
 
   const handleSubmit = () => {
     if (!formData.title || !formData.category || !formData.description) {
@@ -84,7 +105,22 @@ export default function ComplaintPage() {
   };
 
   const handleImageChange = (e) => {
-    if (e.target.files[0]) setImageFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) fileInput.value = '';
   };
 
   const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -173,7 +209,12 @@ export default function ComplaintPage() {
         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '20px', padding: 0, margin: 0, flex: 1 }}>
           {menuItems.map((item, i) => (
             <li key={i}>
-              <a href={item.route} onClick={(e) => { e.preventDefault(); handleNavigation(item.route, item.name); }}
+              <Link 
+                to={item.route}
+                onClick={() => {
+                  setActiveMenu(item.name);
+                  setIsSidebarOpen(false);
+                }}
                 style={{
                   color: 'white',
                   textDecoration: 'none',
@@ -187,11 +228,26 @@ export default function ComplaintPage() {
                   transition: 'all 0.3s ease',
                   cursor: 'pointer'
                 }}
-              >{item.name}</a>
+                onMouseEnter={(e) => {
+                  if (activeMenu !== item.name) {
+                    e.target.style.opacity = 1;
+                    e.target.style.transform = 'translateX(5px)';
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeMenu !== item.name) {
+                    e.target.style.opacity = 0.85;
+                    e.target.style.transform = 'translateX(0)';
+                    e.target.style.background = 'transparent';
+                  }
+                }}
+              >
+                {item.name}
+              </Link>
             </li>
           ))}
         </ul>
-
       </aside>
 
       {/* Main content */}
@@ -200,7 +256,7 @@ export default function ComplaintPage() {
         <p style={{ opacity: 0.7, marginBottom: '25px', color: '#2f6b2f' }}>Report waste issues in your area. Our team will respond quickly.</p>
 
         {/* Complaint Form */}
-        <div style={{ background: 'rgba(255,255,255,0.85)', padding: '30px', borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.5)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ background: 'rgba(255,255,255,0.95)', padding: '35px', borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.5)', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(90deg, #2f6b2f, #4a9d4a)' }} />
 
           <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
@@ -233,27 +289,84 @@ export default function ComplaintPage() {
           <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
             <label style={{ marginBottom: '8px', fontWeight: 600, color: '#2f6b2f', fontSize: '0.95rem' }}>Upload Image (Optional)</label>
             <input type="file" accept="image/*" onChange={handleImageChange} style={inputStyle} />
-            {imageFile && <span style={{ marginTop: '8px', fontSize: '0.85rem', color: '#666' }}>Selected: {imageFile.name}</span>}
+            
+            {/* Image Preview */}
+            {imagePreview && (
+              <div style={{ marginTop: '15px', position: 'relative', display: 'inline-block' }}>
+                <img 
+                  src={imagePreview} 
+                  alt="Preview" 
+                  style={{ 
+                    width: '200px', 
+                    height: '200px', 
+                    objectFit: 'cover', 
+                    borderRadius: '12px', 
+                    border: '2px solid #e0e0e0',
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <button
+                  onClick={removeImage}
+                  style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    background: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                  }}
+                  title="Remove image"
+                >
+                  ×
+                </button>
+                <p style={{ marginTop: '8px', fontSize: '0.85rem', color: '#666' }}>{imageFile?.name}</p>
+              </div>
+            )}
           </div>
 
-          <button onClick={handleSubmit} disabled={createMutation.isLoading} style={{ width: '100%', padding: '14px', background: createMutation.isLoading ? '#999' : 'linear-gradient(135deg, #2f6b2f, #3a7d3a)', color: 'white', border: 'none', borderRadius: '10px', fontSize: '1.1rem', fontWeight: 600, cursor: createMutation.isLoading ? 'not-allowed' : 'pointer', boxShadow: '0 4px 12px rgba(47,107,47,0.3)', transition: 'all 0.3s ease' }}>
+          <button 
+            onClick={handleSubmit} 
+            disabled={createMutation.isLoading} 
+            style={{ 
+              width: '100%', 
+              padding: '14px', 
+              background: createMutation.isLoading ? '#999' : 'linear-gradient(135deg, #2f6b2f, #3a7d3a)', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '10px', 
+              fontSize: '1.1rem', 
+              fontWeight: 600, 
+              cursor: createMutation.isLoading ? 'not-allowed' : 'pointer', 
+              boxShadow: '0 4px 12px rgba(47,107,47,0.3)', 
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
+            }}
+          >
+            {createMutation.isLoading && (
+              <div style={{
+                width: '20px',
+                height: '20px',
+                border: '3px solid rgba(255,255,255,0.3)',
+                borderTop: '3px solid white',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }} />
+            )}
             {createMutation.isLoading ? 'Submitting...' : 'Submit Complaint'}
           </button>
         </div>
-
-        {/* Complaints Table */}
-        <h2 style={{ marginBottom: '15px', color: '#1f5520', fontSize: '1.5rem' }}>Your Complaints</h2>
-        {isLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}>
-            <p style={{ color: '#2f6b2f', fontSize: '1.1rem' }}>Loading complaints...</p>
-          </div>
-        ) : error ? (
-          <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}>
-            <p style={{ color: '#ef4444', fontSize: '1.1rem' }}>Failed to load complaints. Please refresh the page.</p>
-          </div>
-        ) : (
-          renderComplaintsTable(complaints)
-        )}
 
         {/* Admin - All Complaints */}
         {user?.role === 'admin' && (

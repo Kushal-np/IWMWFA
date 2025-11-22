@@ -6,6 +6,20 @@ import { ArrowLeft } from 'lucide-react';
 
 const AboutPage = () => {
   const navigate = useNavigate();
+  
+  React.useEffect(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    
+    return () => {
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+    };
+  }, []);
 
   return (
     <div style={{ 
@@ -55,11 +69,11 @@ const AboutPage = () => {
         </h1>
         <p style={{ 
           fontSize: '22px', 
-          maxWidth: '700px', 
+          maxWidth: '800px', 
           margin: '0 auto',
           lineHeight: '1.6'
         }}>
-          Transforming waste management into a smart, seamless, and eco-friendly experience for everyone.
+          WasteCare is the official digital platform for streamlined waste management. It enables residents and businesses to manage waste responsibly, access municipal services, and contribute to a cleaner, healthier community.
         </p>
       </section>
 
@@ -72,19 +86,21 @@ const AboutPage = () => {
           borderRadius: '18px',
           margin: '35px 0',
           lineHeight: '1.7',
-          fontSize: '18px'
+          fontSize: '18px',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          transition: 'all 0.3s ease'
         }}>
           <h2 style={{ 
             fontSize: '34px', 
             marginBottom: '15px',
-            fontFamily: 'Georgia, serif'
+            fontFamily: 'Georgia, serif',
+            color: '#a8e6a3'
           }}>
             Our Mission
           </h2>
           <p>
-            At WasteCare, we believe every community deserves clean streets, efficient waste systems,
-            and a healthier environment. Our mission is to modernize waste management using technology
-            and thoughtful design.
+            Our mission is to ensure efficient, transparent, and sustainable waste management across the city. By integrating technology with municipal services, WasteCare helps communities reduce waste, increase recycling, and maintain cleaner neighborhoods.
           </p>
         </div>
 
@@ -95,19 +111,21 @@ const AboutPage = () => {
           borderRadius: '18px',
           margin: '35px 0',
           lineHeight: '1.7',
-          fontSize: '18px'
+          fontSize: '18px',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          transition: 'all 0.3s ease'
         }}>
           <h2 style={{ 
             fontSize: '34px', 
             marginBottom: '15px',
-            fontFamily: 'Georgia, serif'
+            fontFamily: 'Georgia, serif',
+            color: '#a8e6a3'
           }}>
             Who We Are
           </h2>
           <p>
-            WasteCare is a digital waste-management platform built for residents and businesses.
-            We simplify everyday tasks — from scheduling pickups to tracking recycling habits — making waste
-            management effortless and intuitive.
+            WasteCare is a government-backed digital platform designed for residents, commercial establishments, and local authorities. It provides tools to schedule waste collection, report issues, track recycling, and access official guidelines on waste management.
           </p>
         </div>
 
@@ -118,12 +136,16 @@ const AboutPage = () => {
           borderRadius: '18px',
           margin: '35px 0',
           lineHeight: '1.7',
-          fontSize: '18px'
+          fontSize: '18px',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          transition: 'all 0.3s ease'
         }}>
           <h2 style={{ 
             fontSize: '34px', 
-            marginBottom: '15px',
-            fontFamily: 'Georgia, serif'
+            marginBottom: '20px',
+            fontFamily: 'Georgia, serif',
+            color: '#a8e6a3'
           }}>
             What We Do
           </h2>
@@ -132,10 +154,50 @@ const AboutPage = () => {
             paddingLeft: '0',
             fontSize: '18px'
           }}>
-            <li style={{ margin: '12px 0' }}>✔ Smart pickup scheduling</li>
-            <li style={{ margin: '12px 0' }}>✔ Online bill payments</li>
-            <li style={{ margin: '12px 0' }}>✔ Recycling & sorting guidance</li>
-            <li style={{ margin: '12px 0' }}>✔ Community impact tracking</li>
+            <li style={{ 
+              margin: '16px 0',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px'
+            }}>
+              <span style={{ color: '#a8e6a3', fontSize: '24px', fontWeight: 'bold' }}>•</span>
+              <div>
+                <strong style={{ color: '#a8e6a3' }}>Scheduled Waste Collection:</strong> Residents and businesses can book and manage timely waste pickups.
+              </div>
+            </li>
+            <li style={{ 
+              margin: '16px 0',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px'
+            }}>
+              <span style={{ color: '#a8e6a3', fontSize: '24px', fontWeight: 'bold' }}>•</span>
+              <div>
+                <strong style={{ color: '#a8e6a3' }}>Online Payments & Service Requests:</strong> Securely pay municipal waste charges and submit service requests online.
+              </div>
+            </li>
+            <li style={{ 
+              margin: '16px 0',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px'
+            }}>
+              <span style={{ color: '#a8e6a3', fontSize: '24px', fontWeight: 'bold' }}>•</span>
+              <div>
+                <strong style={{ color: '#a8e6a3' }}>Recycling & Sorting Guidelines:</strong> Access official guidance to segregate waste correctly and reduce landfill impact.
+              </div>
+            </li>
+            <li style={{ 
+              margin: '16px 0',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px'
+            }}>
+              <span style={{ color: '#a8e6a3', fontSize: '24px', fontWeight: 'bold' }}>•</span>
+              <div>
+                <strong style={{ color: '#a8e6a3' }}>Community Reports & Insights:</strong> Track collective recycling efforts, waste reduction statistics, and city-wide impact.
+              </div>
+            </li>
           </ul>
         </div>
 
@@ -146,18 +208,21 @@ const AboutPage = () => {
           borderRadius: '18px',
           margin: '35px 0',
           lineHeight: '1.7',
-          fontSize: '18px'
+          fontSize: '18px',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          transition: 'all 0.3s ease'
         }}>
           <h2 style={{ 
             fontSize: '34px', 
             marginBottom: '15px',
-            fontFamily: 'Georgia, serif'
+            fontFamily: 'Georgia, serif',
+            color: '#a8e6a3'
           }}>
             Our Vision
           </h2>
           <p>
-            A cleaner, greener future where waste is minimized, recycling is maximized, and every citizen
-            is empowered to care for the environment.
+            WasteCare envisions a city where waste is minimized, resources are efficiently managed, and all citizens participate in sustainable practices. Our goal is to promote a cleaner, greener, and more livable urban environment for everyone.
           </p>
         </div>
       </section>
@@ -165,12 +230,16 @@ const AboutPage = () => {
       {/* Footer */}
       <footer style={{
         textAlign: 'center',
-        padding: '25px',
-        background: '#5da463',
+        padding: '30px 25px',
+        background: 'linear-gradient(135deg, #4a9c5a 0%, #3d8249 100%)',
         marginTop: '40px',
-        fontSize: '15px'
+        fontSize: '15px',
+        fontWeight: '500',
+        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.2)'
       }}>
-        © 2025 WasteCare — Clean streets, green minds.
+        <p style={{ margin: '0' }}>
+          © 2025 WasteCare — Official e-governance platform for municipal waste management.
+        </p>
       </footer>
     </div>
   );
